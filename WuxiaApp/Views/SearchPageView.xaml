@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
+             xmlns:viewmodel="clr-namespace:WuxiaApp.ViewModels"
+             x:Class="WuxiaApp.Views.SearchPageView"
+             Title="SearchPageView"
+             x:DataType="viewmodel:SearchPageViewModel">
+
+
+    <!--<Grid x:Name="grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50" x:Name="firstRow"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>-->
+    <Grid RowDefinitions="55,*"
+          x:Name="mainGrid">
+
+
+
+
+
+
+        <CollectionView ItemsSource="{Binding Books}"
+                        SelectionMode="None"
+                        Grid.Row="1"
+                        x:Name="Coll">
+
+            <!--<CollectionView.ItemsLayout>
+                <GridItemsLayout 
+                    x:Name="AlbumViewLayout"
+                    Orientation="Vertical"                       this is for Windows!
+                    Span="3"
+                    VerticalItemSpacing="4"
+                    HorizontalItemSpacing="4" />
+            </CollectionView.ItemsLayout>-->
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Book">
+                    <Grid ColumnDefinitions="140,*"
+                          ColumnSpacing="10"
+                          Padding="10"
+                          HeightRequest="200">
+                        <Image Source="{Binding PicturePath}"
+                               WidthRequest="140"
+                               Grid.Column="0"
+                               IsOpaque="True"
+                               SemanticProperties.Description="No Img Here">
+                        </Image>
+                        <Label Text="{Binding  Title}"
+                               Margin="0,5,0,0"
+                               FontAttributes="Bold"
+                               FontSize="16"
+                               Grid.Column="1" />
+                        <Grid ColumnDefinitions="30,*"
+                              RowDefinitions="*,*,*"
+                              Grid.Column="1"
+                              ColumnSpacing="10"
+                              VerticalOptions="End">
+                            <!--<Label Text="{Binding description}"/>-->
+                            <Label Text="{Binding Chapters}"
+                                   Grid.Row="0"
+                                   Grid.Column="1"
+                                   VerticalOptions="Center" />
+                            <Image Source="icons_page_64.png"
+                                   Aspect="AspectFit"
+                                   Grid.Column="0"
+                                   Grid.Row="0" />
+
+                            <Label Text="{Binding Ratings}"
+                                   Grid.Column="1"
+                                   Grid.Row="1"
+                                   VerticalOptions="Center" />
+                            <Image Source="icons_thumbs_up_64.png"
+                                   Aspect="AspectFit"
+                                   Grid.Column="0"
+                                   Grid.Row="1" />
+
+                            <Label Text="{Binding Views}"
+                                   Grid.Row="2"
+                                   Grid.Column="1"
+                                   VerticalOptions="Center" />
+                            <Image Source="icons_eye_64.png"
+                                   Aspect="AspectFit"
+                                   Grid.Column="0"
+                                   Grid.Row="2" />
+
+                        </Grid>
+                    </Grid>
+
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <!--WidthRequest="{Binding Width,Source={Reference mainGrid}}" for searchbar-->
+        <SearchBar x:Name="searchBar"
+                   SearchCommand="{Binding SearchBooksCommand}"
+                   SearchCommandParameter="{Binding Text,Source={Reference searchBar}}"
+                   HorizontalOptions="FillAndExpand"
+                   VerticalOptions="Start"
+                   Grid.Row="0"
+                   HeightRequest="50"
+                   IsTextPredictionEnabled="True"
+                   Placeholder="Type here">
+            <SearchBar.Shadow>
+                <Shadow Brush="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Primary}}"
+                        Opacity="0.5"
+                        Radius="10"
+                        Offset="0,12" />
+            </SearchBar.Shadow>
+        </SearchBar>
+        <ImageButton Grid.Column="1"
+                     WidthRequest="60"
+                     HeightRequest="30"
+                     HorizontalOptions="End"
+                     Margin="0,0,30,4"
+                     BackgroundColor="Transparent"
+                     Source="icon_sort_light.png"
+                     IsEnabled="{Binding IsBusy}" />
+        <ActivityIndicator IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           Grid.RowSpan="2"
+                           HorizontalOptions="Fill"
+                           VerticalOptions="Center"/>
+
+    </Grid>
+    <!--</Grid>-->
+
+</ContentPage>

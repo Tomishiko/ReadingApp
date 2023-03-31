@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WuxiaApp.Views.DetailsPage"
+             Title="DetailsPage"
+             Shell.NavBarIsVisible="True"
+             Shell.TabBarIsVisible="False"
+             x:Name="details">
+    
+    <VerticalStackLayout>
+        <Label 
+            Text="Welcome to Details books page"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+    </VerticalStackLayout>
+</ContentPage>

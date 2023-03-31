@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="WuxiaApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:WuxiaApp"
+    xmlns:view="clr-namespace:WuxiaApp.Views"
+    Shell.FlyoutBehavior="Disabled"
+    Shell.NavBarIsVisible="False">
+
+    <!--<ShellContent
+        Title="Library"
+        ContentTemplate="{DataTemplate view:Popular}"
+        Route="MainPage" />-->
+
+    <TabBar>
+
+        
+            <ShellContent Shell.TabBarIsVisible="True" ContentTemplate="{DataTemplate view:Library}" Title="Library" Icon="icon_book_64.png" Route="Lib"/>
+            <ShellContent Shell.TabBarIsVisible="True" ContentTemplate="{DataTemplate view:Popular}" Title="Popular" Icon="icon_book_64.png" Route="Pop"/>
+            <ShellContent Shell.TabBarIsVisible="True" ContentTemplate="{DataTemplate view:SearchPageView}" Title="Search" Icon="icons_search_64.png" Route="Search"/>
+
+    </TabBar>
+    
+
+</Shell>

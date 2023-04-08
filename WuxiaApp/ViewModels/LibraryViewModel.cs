@@ -70,7 +70,7 @@ public partial class LibraryViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    async Task DeleteLastBookAsync()
+    async Task DeleteLastBookAsync(Book bookToDelete)
     {
         if (IsBusy)
             return;
@@ -78,8 +78,8 @@ public partial class LibraryViewModel : BaseViewModel
         {
             IsBusy = true;
 
-            services.DeleteLastBook();
-            Books.RemoveAt(Books.Count - 1);
+            //services.DeleteLastBook();
+            Books.Remove(bookToDelete);
 
         }
         catch (Exception ex)

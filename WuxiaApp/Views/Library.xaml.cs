@@ -1,5 +1,6 @@
 ﻿using WuxiaApp.ViewModels;
 using Scraper;
+using General.DataModels;
 
 namespace WuxiaApp.Views
 {
@@ -15,8 +16,14 @@ namespace WuxiaApp.Views
             BindingContext = libraryViewModel;
         }
 
-
-
-
+        private void SwipeItem_Invoked(object sender, EventArgs e)
+        {
+            var swipe = sender as SwipeItemView;
+            var book = swipe.BindingContext as Book;
+            var vm = BindingContext as LibraryViewModel;
+            vm.DeleteLastBookCommand.Execute(book);
+            
+            
+        }
     }
 }

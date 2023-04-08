@@ -6,6 +6,7 @@
              xmlns:viewmodel="clr-namespace:WuxiaApp.ViewModels"
              xmlns:model="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
              x:DataType="viewmodel:LibraryViewModel"
+             x:Name="LibraryView"
              >
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Dark={StaticResource Black}, Light=White}" StatusBarStyle="{AppThemeBinding Dark=LightContent, Light=DarkContent}"/>
@@ -16,16 +17,31 @@
         
         RowDefinitions="*,Auto"
         RowSpacing="0">
-        
-        
+
+
             <CollectionView ItemsSource="{Binding Books}"
                             SelectionMode="None"
                             Grid.ColumnSpan="2"
                             Grid.Column="0">
+                
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="model:Book">
-
-                        
+                        <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <!--<SwipeItem IconImageSource="icons_waste.png"
+                                           Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.DeleteLastBookCommand}"
+                                           CommandParameter="{Binding}" />-->
+                                <SwipeItemView HeightRequest="100"
+                                               Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.DeleteLastBookCommand}"
+                                               CommandParameter="{Binding}">
+                                    <Frame BorderColor="Red" BackgroundColor="Transparent" CornerRadius="20" HeightRequest="100"
+                                           >
+                                        <Image Source="icons_waste.png"/>
+                                    </Frame>
+                                </SwipeItemView>
+                            </SwipeItems>
+                        </SwipeView.RightItems>
                         <VerticalStackLayout HorizontalOptions="Start">
                         <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="10">
                             <Image Source="{Binding PicturePath}" WidthRequest="140" HeightRequest="200" Grid.Column="0"/>
@@ -35,18 +51,15 @@
                             </VerticalStackLayout>
                         </Grid>
                     </VerticalStackLayout>
-                          
+                        </SwipeView>
 
-                </DataTemplate>
+                    </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
 
+        
         <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End">
-        <Button Text="DeleteLast" 
-                Command="{Binding DeleteLastBookCommand}"
-                IsEnabled="{Binding IsNotBusy}"
-                Grid.Column="0"
-                Margin="8"/>
+
         <Button Text="+" 
                 Grid.Column="1"
                 Command="{Binding AddNewBookCommand}"

@@ -5,15 +5,37 @@ using WuxiaApp.Servs;
 using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using WuxiaClassLib.DataModels;
+using System.Windows.Input;
 
 namespace WuxiaApp.ViewModels;
 
+public partial class UICollectionElement : ObservableObject
+{
+    [NotifyPropertyChangedFor(nameof(IsNotLoading))]
+    [ObservableProperty]
+    bool isLoading;
+    public bool IsNotLoading => !IsLoading;
+    public ObservableCollection<Book> Books { get; }
+    [ObservableProperty]
+    string categoryName;
+    [ObservableProperty]
+    int opacity;
+    public ICommand TriggerAnimationCommand { get; set; }
+
+    public UICollectionElement(string category)
+    {
+        Books = new();
+        IsLoading = true;
+        CategoryName = category;
+        opacity= 1;
+    }
+}
+
 public partial class PopularViewModel : BaseViewModel
 {
-    //public ObservableCollection<Book> Books { get; } = new();
     readonly Services services;
 
-    public ObservableCollection<PopularBooksModel> Data { get; } = new();
+    public ObservableCollection<UICollectionElement> Data { get; } = new();
     public PopularViewModel(Services services)
     {
         this.services = services;
@@ -30,37 +52,18 @@ public partial class PopularViewModel : BaseViewModel
     [RelayCommand]
     async Task GetBooksAsync()
     {
+        List<Task> tasks = new();
         if (IsBusy)
             return;
+        Data.Add(new UICollectionElement("Hot novels"));
+        Data.Add(new UICollectionElement("Top viewed Novels"));
         try
         {
-         
+            
             IsBusy = true;
+            tasks.Add(populateBooks(Data[0], order: "-weekly_views"));
+            tasks.Add(populateBooks(Data[1]));
 
-            var books = await populateBooks();
-            Data.Add(new PopularBooksModel("Top Viewed Novels", books));
-            Data[0].isLoading= false;
-            IsBusy = false;
-
-            books = await populateBooks( order:"-weekly_views");
-            Data.Add(new PopularBooksModel("Hot Novels", books));
-            Data[1].isLoading = false;
-
-            books = await populateBooks(searchPattern:"xuanhuan");
-            Data.Add(new PopularBooksModel("Most Viewed Xuanhuan", books));
-            Data[2].isLoading = false;
-
-            books = await populateBooks(searchPattern: "mature");
-            Data.Add(new PopularBooksModel("Most Viewed Mature", books));
-            Data[3].isLoading = false;
-
-            books = await populateBooks(searchPattern: "mecha");
-            Data.Add(new PopularBooksModel("Most Viewed Mecha", books));
-            Data[4].isLoading = false;
-
-            books = await populateBooks(searchPattern: "sci-fi");
-            Data.Add(new PopularBooksModel("Most Viewed Sci-fi", books));
-            Data[5].isLoading = false;
         }
         catch (Exception ex)
         {
@@ -69,16 +72,17 @@ public partial class PopularViewModel : BaseViewModel
 
         }
         finally 
-        { 
+        {
+            await Task.WhenAll(tasks);
             IsBusy = false;
 
         }
     }
 
-    async Task<List<Book>> populateBooks(string searchPattern = "", 
+    async Task populateBooks(UICollectionElement currentElement,string searchPattern = "", 
         string order = "-total_views")
     {
-        List<Book> books = new();
+        //List<Book> books = new();
         searchResult searchresult;
         searchresult = await services.SearchBook(category:searchPattern,ordering:order);
         foreach (var result in searchresult.results)
@@ -95,9 +99,14 @@ public partial class PopularViewModel : BaseViewModel
                 book.PicturePath = "unloaded_image.png";
             else
                 book.PicturePath = ImageParams["source"] + result.slug + ImageParams["preview"];
-            books.Add(book);
+            currentElement.Books.Add(book);
         }
-        return books;
+        
+        //currentElement.TriggerAnimationCommand.Execute(null);
+        currentElement.IsLoading = false;
+
+
+        //return books;
 
     }
 

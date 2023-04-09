@@ -78,7 +78,7 @@ public partial class LibraryViewModel : BaseViewModel
         {
             IsBusy = true;
 
-            //services.DeleteLastBook();
+            services.DeleteBook(bookToDelete);
             Books.Remove(bookToDelete);
 
         }

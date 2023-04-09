@@ -6,6 +6,7 @@ using General.DataModels;
 using WuxiaClassLib.DataModels;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Headers;
+using System.Xml.Linq;
 
 namespace WuxiaApp.Servs;
 public class Services
@@ -94,19 +95,29 @@ public class Services
         await streamWriter.WriteAsync(content);
     }
 
-    public async void DeleteLastBook()
+    public void DeleteBook(Book book)
     {
-        bookList?.RemoveAt(bookList.Count - 1);
-        var content = JsonSerializer.Serialize(bookList);
-        //using var stream = await FileSystem.OpenAppPackageFileAsync("library");
-        //using var writer = new StreamWriter(stream,);
-        //await writer.WriteLineAsync(content);
-
+        bookList?.Remove(book);
+       
     }
 
+    public async Task Save()
+    {
+        var content = JsonSerializer.Serialize(bookList);
+        using var stream = File.Open(
+            Path.Combine(FileSystem.Current.AppDataDirectory, "library.dat"), FileMode.Create);
+        using var writer = new StreamWriter(stream);
+        await writer.WriteLineAsync(content);
+
+    }
     public void AddNewBook(Book book)
     {
         bookList.Add(book);
+    }
+
+    ~Services()
+    {
+        Save();
     }
 }
 

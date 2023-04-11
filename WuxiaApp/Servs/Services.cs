@@ -114,10 +114,5 @@ public class Services
     {
         bookList.Add(book);
     }
-
-    ~Services()
-    {
-        Save();
-    }
 }
 

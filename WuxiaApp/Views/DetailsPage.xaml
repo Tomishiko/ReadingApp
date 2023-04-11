@@ -2,15 +2,47 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="WuxiaApp.Views.DetailsPage"
-             Title="DetailsPage"
+             xmlns:viewmodels="clr-namespace:WuxiaApp.ViewModels"
+             x:DataType="viewmodels:DetailsViewModel"
+             Title="{Binding Title}"
              Shell.NavBarIsVisible="True"
-             Shell.TabBarIsVisible="False"
              x:Name="details">
-    
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to Details books page"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <Grid>
+        <Image Source="{Binding Book.PicturePath}"
+               HorizontalOptions="CenterAndExpand"
+               x:Name="img"
+               VerticalOptions="Start" />
+        <ScrollView x:Name="descr"
+                    VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout BackgroundColor="Transparent">
+                <Frame BackgroundColor="Transparent"
+                       BorderColor="Transparent"
+                       HeightRequest="500" />
+                <Frame CornerRadius="0"
+                       BorderColor="Transparent"
+                       BackgroundColor="Black"
+                       Padding="0">
+                    <VerticalStackLayout Padding="10">
+                        <Label Text="{Binding Book.Title}" Margin="20"/>
+                        <Label Text="{Binding Book.Description}"
+                               FontSize="40" />
+                        <Label Text="{Binding Book.Description}"
+                               FontSize="40" />
+                        <Label Text="{Binding Book.Description}"
+                               FontSize="40" />
+                        <Label Text="{Binding Book.Description}"
+                               FontSize="40" />
+                        <Label Text="{Binding Book.Description}"
+                               FontSize="40" />
+                        <Label Text="{Binding Book.Description}"
+                               FontSize="40" />
+                        <Label Text="{Binding Book.Description}"
+                               FontSize="40" />
+                        <Label Text="{Binding Book.Ratings}" />
+                        <Label Text="{Binding Book.Readed}" />
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>

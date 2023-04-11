@@ -1,10 +1,16 @@
+using WuxiaApp.ViewModels;
+
 namespace WuxiaApp.Views;
 
 public partial class DetailsPage : ContentPage
 {
-	public DetailsPage()
+	DetailsViewModel vm;
+	public DetailsPage(DetailsViewModel vm)
 	{
 		InitializeComponent();
+		BindingContext = vm;
+		this.vm=vm;
 		
 	}
+
 }

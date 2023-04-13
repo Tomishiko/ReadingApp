@@ -115,13 +115,17 @@ public partial class PopularViewModel : BaseViewModel
     [RelayCommand]
     async Task NavigateToDetails(string bookSlug)
     {
+        
         if (bookSlug == null)
             return;
-        await Shell.Current.GoToAsync(nameof(DetailsPage), true, new Dictionary<string, object>
+
+        var query = new Dictionary<string, object>
         {
             { "slug", bookSlug }
-        });
-
+        };
+        Shell.Current.GoToAsync(nameof(DetailsPage), true, query);
+        
+        Shell.SetTabBarIsVisible(Shell.Current.CurrentPage,false);
     }
 
 }

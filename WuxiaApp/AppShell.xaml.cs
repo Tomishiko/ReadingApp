@@ -8,7 +8,7 @@ namespace WuxiaApp
         public AppShell()
         {
             InitializeComponent();
-            Routing.RegisterRoute("BookDetails", typeof(DetailsPage));
+            Routing.RegisterRoute(nameof(DetailsPage), typeof(DetailsPage));
         }
     }
 }

@@ -12,6 +12,7 @@ public class Book
     public int Readed { get; set; } 
     public int Chapters { get; set; }
     public string Views { get; set; }
+    public string Slug { get; set; }    
 
 
 }

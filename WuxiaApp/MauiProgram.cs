@@ -32,8 +32,9 @@ namespace WuxiaApp
             builder.Services.AddSingleton<Popular>();
             builder.Services.AddSingleton<SearchPageViewModel>();
             builder.Services.AddSingleton<SearchPageView>();
-            builder.Services.AddSingleton<DetailsViewModel>();
-            builder.Services.AddSingleton<DetailsPage>();
+            builder.Services.AddTransient<DetailsViewModel>();
+            builder.Services.AddTransient<DetailsPage>();
+         
 
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls13;
 

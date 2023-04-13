@@ -22,4 +22,9 @@ public partial class Popular : ContentPage
         if (e.PropertyName == nameof(IsVisible) && currentItem.IsVisible)
 			await currentItem.FadeTo(1, 1500, Easing.CubicIn);
     }
+
+    private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        (sender as CollectionView).SelectedItem = null;
+    }
 }

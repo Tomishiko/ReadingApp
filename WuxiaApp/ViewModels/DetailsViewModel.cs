@@ -7,12 +7,12 @@ using WuxiaClassLib.DataModels;
 
 namespace WuxiaApp.ViewModels;
 //[QueryProperty(nameof(Name),"Book")]
-public partial class DetailsViewModel : BaseViewModel ,IQueryAttributable
+public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
 {
     Services services;
 
     [ObservableProperty]
-    public Book book;
+    Book book;
 
     public DetailsViewModel(Services services)
     {
@@ -28,11 +28,11 @@ public partial class DetailsViewModel : BaseViewModel ,IQueryAttributable
     {
         if (IsBusy)
             return;
-        
+
         var slug = query["slug"] as String;
         if (slug == null)
             return;
-        await GetBookDataAsync(slug); 
+        await GetBookDataAsync(slug);
     }
 
     async Task GetBookDataAsync(string name)
@@ -49,8 +49,13 @@ public partial class DetailsViewModel : BaseViewModel ,IQueryAttributable
                 Description = bookinfo.description,
                 Ratings = bookinfo.rating,
                 Title = bookinfo.name,
-                Views = bookinfo.views,
-                Slug = bookinfo.slug
+                Views = bookinfo.human_views,
+                Author = bookinfo.author,
+                Categories = bookinfo.category,
+                FirstChapter = bookinfo.first_chapter,
+                LastUpdate = bookinfo.last_chap_updated,
+                Status = bookinfo.novelStatus,
+                Ranking = bookinfo.ranking
             };
             if (bookinfo.image == null)
                 book.PicturePath = "unloaded_image.png";
@@ -64,7 +69,7 @@ public partial class DetailsViewModel : BaseViewModel ,IQueryAttributable
             await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
 
         }
-        { IsBusy = false;}
+        { IsBusy = false; }
 
     }
 }

@@ -25,7 +25,7 @@ public class Services
         
     }
 
-    public async Task<List<Book>> GetBooksLocal()
+    public async Task<List<Book>> GetBooksLocalAsync()
     {
 
         if (bookList?.Count > 0)
@@ -40,7 +40,7 @@ public class Services
         return bookList;
     }
 
-    public async Task<searchResult> SearchBook(string searchPattern="",string ordering= "-total_views",string category="",string limit="10")
+    public async Task<searchResult> SearchBookAsync(string searchPattern="",string ordering= "-total_views",string category="",string limit="10")
     {
         var query = new Dictionary<string, string>()
         {
@@ -62,7 +62,7 @@ public class Services
         return jsonObject;
     }
 
-    public async Task<searchResult> AdvancedFiltering(string categories="",string ordering="-total_views")
+    public async Task<searchResult> AdvancedFilteringAsync(string categories="",string ordering="-total_views")
     {
 
         var query = new Dictionary<string, string>()
@@ -80,7 +80,7 @@ public class Services
         return await response.Content.ReadFromJsonAsync<searchResult>();
     }
 
-    public async Task CopyLibraryFile(string sourceFile, string targetFileName)
+    public async Task CopyLibraryFileAsync(string sourceFile, string targetFileName)
     {
         using Stream fileStream = await FileSystem.Current.OpenAppPackageFileAsync(sourceFile);
         using StreamReader reader = new StreamReader(fileStream);
@@ -113,6 +113,15 @@ public class Services
     public void AddNewBook(Book book)
     {
         bookList.Add(book);
+    }
+    public async Task<BookInfo> GetBookInfoAsync(string name)
+    {
+        using var request = new HttpRequestMessage(HttpMethod.Get, "novels/"+name);
+        var response = await client.SendAsync(request);
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<BookInfo>();
+        return result;
+
     }
 }
 

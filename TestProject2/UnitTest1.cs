@@ -16,7 +16,7 @@ namespace TestProject2
         public async void NewHttpRequestTest()
         {
             var servs = new Services();
-            var output = await servs.SearchBook("martial");
+            var output = await servs.SearchBookAsync("martial");
             
         }
 
@@ -24,13 +24,21 @@ namespace TestProject2
         public async void AdvanceSearchIsWorking()
         {
             var services = new Services();
-            var respond = await services.AdvancedFiltering("xuanhuan");
+            var respond = await services.AdvancedFilteringAsync("xuanhuan");
         }
         [Fact]
         public void FiltratingNovelsByCategoryIsWorking()
         {
             var services = new Services();
-            services.SearchBook(category: "xuanhuan");
+            services.SearchBookAsync(category: "xuanhuan");
+        }
+
+        [Fact]
+        public async void GetBookInfoReturnsBookInfo()
+        {
+            var services = new Services();
+            var resp = await services.GetBookInfoAsync("library-of-heavens-path");
+            output.WriteLine((await services.GetBookInfoAsync("library-of-heavens-path")).ToString());
         }
     }
 }

@@ -51,7 +51,7 @@ public partial class SearchPageViewModel : BaseViewModel
             Platform.CurrentActivity.CurrentFocus.ClearFocus();
         }
 #endif
-            var searchresult = await services.SearchBook(searchParam); 
+            var searchresult = await services.SearchBookAsync(searchParam); 
             if (Books.Count != 0)
                 Books.Clear();
             foreach (var result in searchresult.results)

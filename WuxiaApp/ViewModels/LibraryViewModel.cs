@@ -34,7 +34,7 @@ public partial class LibraryViewModel : BaseViewModel
 
         try
         {
-            await services.CopyLibraryFile("library", "library.dat");
+            await services.CopyLibraryFileAsync("library", "library.dat");
 
         }
         catch (Exception ex)
@@ -53,7 +53,7 @@ public partial class LibraryViewModel : BaseViewModel
         {
             IsBusy = true;
 
-            var books = await services.GetBooksLocal();
+            var books = await services.GetBooksLocalAsync();
             if (Books.Count != 0)
                 Books.Clear();
             foreach (var book in books)

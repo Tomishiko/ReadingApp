@@ -4,45 +4,71 @@
              x:Class="WuxiaApp.Views.DetailsPage"
              xmlns:viewmodels="clr-namespace:WuxiaApp.ViewModels"
              x:DataType="viewmodels:DetailsViewModel"
-             Title="{Binding Title}"
+             Title="{Binding Book.Title}"
              Shell.NavBarIsVisible="True"
              x:Name="details">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Shadow x:Key="BorderShadow"
+                    Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Primary}}"
+                    Opacity="1"
+                    Radius="50"
+                    Offset="0,-50" />
+        </ResourceDictionary>
+        
+        <Style TargetType="VerticalStackLayout">
+            <Setter Property="BackgroundColor"
+                    Value="{StaticResource Gray900}" />
+        </Style>
+    </ContentPage.Resources>
+
     <Grid>
         <Image Source="{Binding Book.PicturePath}"
                HorizontalOptions="CenterAndExpand"
                x:Name="img"
-               VerticalOptions="Start" />
+               VerticalOptions="Start"
+               ZIndex="0" />
         <ScrollView x:Name="descr"
-                    VerticalScrollBarVisibility="Never">
+                    VerticalScrollBarVisibility="Never"
+                    >
             <VerticalStackLayout BackgroundColor="Transparent">
                 <Frame BackgroundColor="Transparent"
                        BorderColor="Transparent"
-                       HeightRequest="500" />
-                <Frame CornerRadius="0"
-                       BorderColor="Transparent"
-                       BackgroundColor="Black"
-                       Padding="0">
-                    <VerticalStackLayout Padding="10">
-                        <Label Text="{Binding Book.Title}" Margin="20"/>
-                        <Label Text="{Binding Book.Description}"
-                               FontSize="40" />
-                        <Label Text="{Binding Book.Description}"
-                               FontSize="40" />
-                        <Label Text="{Binding Book.Description}"
-                               FontSize="40" />
-                        <Label Text="{Binding Book.Description}"
-                               FontSize="40" />
-                        <Label Text="{Binding Book.Description}"
-                               FontSize="40" />
-                        <Label Text="{Binding Book.Description}"
-                               FontSize="40" />
-                        <Label Text="{Binding Book.Description}"
-                               FontSize="40" />
-                        <Label Text="{Binding Book.Ratings}" />
-                        <Label Text="{Binding Book.Readed}" />
+                       HeightRequest="450" />
+                <Frame BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
+                       HeightRequest="600"
+                       CornerRadius="10">
+                    <VerticalStackLayout>
+                        <Button Text="Continue reading Chapter 145"
+                                FontAttributes="Bold"
+                                HorizontalOptions="Center"
+                                Style="{StaticResource BtnStyle}" />
+                        <Border  Margin="20"
+                                 StrokeThickness="1"
+                                 BackgroundColor="{StaticResource Gray200}" 
+                                 WidthRequest="500"/>
+                        <Label Text= "{Binding Book.Title,StringFormat= 'Author: {0}'}" 
+                               TextColor="White" />
+
+
+                        <!--
+                            <Button Text="Continue Chap. 145"
+                                    Style="{StaticResource BtnStyle}" />
+
+                            -->
+                        <!--<Button Text="Add to library"
+                                    ImageSource="icon_book_64.png"
+                                    ContentLayout="Left,0"
+                                    Style="{StaticResource BtnStyle}" />-->
                     </VerticalStackLayout>
                 </Frame>
             </VerticalStackLayout>
         </ScrollView>
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}" 
+                           VerticalOptions="Start"
+                           Margin="0,225,0,0"
+                           Color="White"/>
     </Grid>
 </ContentPage>

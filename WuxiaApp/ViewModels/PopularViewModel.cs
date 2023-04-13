@@ -6,6 +6,7 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using WuxiaClassLib.DataModels;
 using System.Windows.Input;
+using WuxiaApp.Views;
 
 namespace WuxiaApp.ViewModels;
 
@@ -84,7 +85,7 @@ public partial class PopularViewModel : BaseViewModel
     {
         //List<Book> books = new();
         searchResult searchresult;
-        searchresult = await services.SearchBook(category:searchPattern,ordering:order);
+        searchresult = await services.SearchBookAsync(category:searchPattern,ordering:order);
         foreach (var result in searchresult.results)
         {
             var book = new Book()
@@ -93,7 +94,8 @@ public partial class PopularViewModel : BaseViewModel
                 Description = result.description,
                 Ratings = result.rating,
                 Title = result.name,
-                Views = result.views
+                Views = result.views,
+                Slug = result.slug
             };
             if (result.image == null)
                 book.PicturePath = "unloaded_image.png";
@@ -110,6 +112,16 @@ public partial class PopularViewModel : BaseViewModel
 
     }
 
+    [RelayCommand]
+    async Task NavigateToDetails(string bookSlug)
+    {
+        if (bookSlug == null)
+            return;
+        await Shell.Current.GoToAsync(nameof(DetailsPage), true, new Dictionary<string, object>
+        {
+            { "slug", bookSlug }
+        });
 
+    }
 
 }

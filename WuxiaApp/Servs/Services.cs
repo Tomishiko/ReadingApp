@@ -112,6 +112,8 @@ public class Services
     }
     public void AddNewBook(Book book)
     {
+        if (bookList.Contains(book))
+            return;
         bookList.Add(book);
     }
     public async Task<BookInfo> GetBookInfoAsync(string name)

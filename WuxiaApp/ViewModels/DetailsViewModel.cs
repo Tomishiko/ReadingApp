@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using General.DataModels;
 using System.Diagnostics;
 using WuxiaApp.Servs;
@@ -10,12 +11,14 @@ namespace WuxiaApp.ViewModels;
 public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
 {
     Services services;
+    LibraryViewModel libraryViewModel;
 
     [ObservableProperty]
     Book book;
-
-    public DetailsViewModel(Services services)
+   
+    public DetailsViewModel(Services services,LibraryViewModel libVm)
     {
+        libraryViewModel = libVm;
         this.services = services;
         ImageParams = new Dictionary<string, string>
         {
@@ -72,6 +75,13 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
         { IsBusy = false; }
 
     }
+    void AddNewBook(Book book)
+    {
+        services.AddNewBook(book);
+        libraryViewModel.Books.Add(book);
+    }
+
+
 }
 
 

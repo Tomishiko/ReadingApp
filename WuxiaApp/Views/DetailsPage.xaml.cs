@@ -5,6 +5,7 @@ namespace WuxiaApp.Views;
 public partial class DetailsPage : ContentPage
 {
 	DetailsViewModel vm;
+
 	public DetailsPage(DetailsViewModel vm)
 	{
 		InitializeComponent();
@@ -13,4 +14,10 @@ public partial class DetailsPage : ContentPage
 		
 	}
 
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+		var btn = sender as Button;
+		btn.Text = "Done!";
+		btn.IsEnabled = false;
+    }
 }

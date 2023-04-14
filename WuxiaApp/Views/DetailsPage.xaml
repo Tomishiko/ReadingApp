@@ -36,8 +36,7 @@
                        BorderColor="Transparent"
                        HeightRequest="450" />
                 <Frame CornerRadius="10"
-                       IsVisible="{Binding IsNotBusy}"
-                       HeightRequest="1000">
+                       IsVisible="{Binding IsNotBusy}">
                     <VerticalStackLayout>
                         <Button Text="Continue reading Chapter 145"
                                 FontAttributes="Bold"

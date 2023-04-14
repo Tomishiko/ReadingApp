@@ -123,9 +123,9 @@ public partial class PopularViewModel : BaseViewModel
         {
             { "slug", bookSlug }
         };
-        Shell.Current.GoToAsync(nameof(DetailsPage), true, query);
+        await Shell.Current.GoToAsync(nameof(DetailsPage), query);
         
-        Shell.SetTabBarIsVisible(Shell.Current.CurrentPage,false);
+        //Shell.SetTabBarIsVisible(Shell.Current.CurrentPage,false);
     }
 
 }

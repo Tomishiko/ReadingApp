@@ -75,6 +75,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
         { IsBusy = false; }
 
     }
+    [RelayCommand]
     void AddNewBook(Book book)
     {
         services.AddNewBook(book);

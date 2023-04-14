@@ -95,9 +95,9 @@
                                  BackgroundColor="{StaticResource Gray200}"
                                  WidthRequest="500" />
                         <Button Text="Add to Lib"
-                                
                                 Style="{StaticResource BtnStyle}"
-
+                                Command="{Binding AddNewBookCommand}"
+                                CommandParameter="{Binding Book}"
                                 Clicked="Button_Clicked"/>
 
 

@@ -90,31 +90,6 @@ public partial class LibraryViewModel : BaseViewModel
         }
         finally { IsBusy = false; }
     }
-    [RelayCommand]
-    async Task AddNewBookAsync()
-    {
-        
-        if (IsBusy)
-            return;
-        //var link = await Shell.Current.DisplayPromptAsync("Add book", "insert a book link");
-        try
-        {
-            IsBusy = true;
-            WuxiaScraper scrap = new("https://wuxia.click/novel/12-hours-after");
-            
-            var book = await scrap.GetBookOverview();
-            
-            services.AddNewBook(book);
-            Books.Add(book);
 
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Unable to delete book: {ex.Message}");
-            await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
-
-        }
-        finally { IsBusy = false; }
-    }
 }
 

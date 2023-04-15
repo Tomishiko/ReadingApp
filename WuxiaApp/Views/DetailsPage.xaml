@@ -93,11 +93,12 @@
                                  StrokeThickness="1"
                                  BackgroundColor="{StaticResource Gray200}"
                                  WidthRequest="500" />
-                        <Button Text="Add to Lib"
+                        <Button Text="{Binding AddButtonText}"
                                 Style="{StaticResource BtnStyle}"
                                 Command="{Binding AddNewBookCommand}"
                                 CommandParameter="{Binding Book}"
-                                Clicked="Button_Clicked"/>
+                                Clicked="Button_Clicked"
+                                IsEnabled="{Binding AddButtonBehavior}"/>
 
 
                         <!--<Button Text="Add to library"

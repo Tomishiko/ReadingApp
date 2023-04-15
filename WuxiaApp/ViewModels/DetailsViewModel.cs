@@ -10,21 +10,19 @@ namespace WuxiaApp.ViewModels;
 //[QueryProperty(nameof(Name),"Book")]
 public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
 {
-    Services services;
-    LibraryViewModel libraryViewModel;
+    readonly Services services;
+    readonly LibraryViewModel libraryViewModel;
 
     [ObservableProperty]
     Book book;
-   
+    [ObservableProperty]
+    string addButtonText;
+    [ObservableProperty]
+    bool addButtonBehavior = true;
     public DetailsViewModel(Services services,LibraryViewModel libVm)
     {
         libraryViewModel = libVm;
         this.services = services;
-        ImageParams = new Dictionary<string, string>
-        {
-            ["preview"] = ".webp",   //?width=150&quality=60",
-            ["source"] = "https://wuxiaworldeu.b-cdn.net/original/"
-        };
     }
 
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
@@ -32,8 +30,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
         if (IsBusy)
             return;
 
-        var slug = query["slug"] as String;
-        if (slug == null)
+        if (query["slug"] is not string slug)
             return;
         await GetBookDataAsync(slug);
     }
@@ -63,8 +60,16 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
             if (bookinfo.image == null)
                 book.PicturePath = "unloaded_image.png";
             else
-                book.PicturePath = ImageParams["source"] + bookinfo.slug + ImageParams["preview"];
+                book.PicturePath = services.FormPicturePath(bookinfo.slug,"bigpic");
+            
             Book = book;
+            if (services.CheckBookInLib(book))
+            {
+                AddButtonText = "Already in your library";
+                AddButtonBehavior = false;
+            }
+            else
+                AddButtonText = "Add to your library";
         }
         catch (Exception ex)
         {

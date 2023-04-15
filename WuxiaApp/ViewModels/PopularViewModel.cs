@@ -40,12 +40,6 @@ public partial class PopularViewModel : BaseViewModel
     public PopularViewModel(Services services)
     {
         this.services = services;
-        ImageParams = new Dictionary<string, string>
-        {
-            ["preview"] = ".webp?width=150&quality=60",
-            ["source"] = "https://wuxiaworldeu.b-cdn.net/original/"
-        };
-
         Task.Run(async () => await GetBooksAsync());
         Title = "Popular";
     }
@@ -100,7 +94,7 @@ public partial class PopularViewModel : BaseViewModel
             if (result.image == null)
                 book.PicturePath = "unloaded_image.png";
             else
-                book.PicturePath = ImageParams["source"] + result.slug + ImageParams["preview"];
+                book.PicturePath = services.FormPicturePath(result.slug);
             currentElement.Books.Add(book);
         }
         

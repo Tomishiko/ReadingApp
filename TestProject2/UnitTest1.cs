@@ -40,5 +40,20 @@ namespace TestProject2
             var resp = await services.GetBookInfoAsync("library-of-heavens-path");
             output.WriteLine((await services.GetBookInfoAsync("library-of-heavens-path")).ToString());
         }
+
+        [Fact]
+        public void FormPicPathThrowsExceptionWhenNameNull()
+        {
+            var service = new Services();
+            Assert.Throws<ArgumentNullException>(() =>service.FormPicturePath(null));
+        }
+        [Fact]
+        public void FormPicPathThrowsExceptionWhenParamNull()
+        {
+            var service = new Services();
+            Assert.Throws<ArgumentNullException>(() => 
+            service.FormPicturePath("blah",null)
+                );
+        }
     }
 }

@@ -4,6 +4,7 @@ using General.DataModels;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using WuxiaApp.Servs;
+using WuxiaApp.Views;
 #if ANDROID
 using Microsoft.Maui.Platform;
 #endif
@@ -19,12 +20,6 @@ public partial class SearchPageViewModel : BaseViewModel
     public SearchPageViewModel(Services services)
     {
         this.services = services;
-        
-        ImageParams = new Dictionary<string, string>
-        {
-            ["preview"] = ".webp?width=450&quality=100",
-            ["source"] = "https://wuxiaworldeu.b-cdn.net/original/"
-        };
         Title = "Search";
     }
 
@@ -62,12 +57,13 @@ public partial class SearchPageViewModel : BaseViewModel
                     Description = result.description,
                     Ratings = result.rating,
                     Title = result.name,
-                    Views = result.views
+                    Views = result.views,
+                    Slug = result.slug
                 };
                 if (result.image == null)
                     book.PicturePath = "unloaded_image.png";
                 else
-                    book.PicturePath = ImageParams["source"] + result.slug + ImageParams["preview"];
+                    book.PicturePath = services.FormPicturePath(result.slug);
                 Books.Add(book);
             }
                 
@@ -82,6 +78,21 @@ public partial class SearchPageViewModel : BaseViewModel
 
         }
         finally { IsBusy = false; }
+    }
+
+    [RelayCommand]
+    async Task NavigateToDetails(string bookSlug)
+    {
+
+        if (bookSlug == null)
+            return;
+
+        var query = new Dictionary<string, object>
+        {
+            { "slug", bookSlug }
+        };
+        await Shell.Current.GoToAsync(nameof(DetailsPage), query);
+
     }
 }
 

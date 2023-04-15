@@ -6,27 +6,25 @@
              xmlns:viewmodel="clr-namespace:WuxiaApp.ViewModels"
              xmlns:model="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
              x:DataType="viewmodel:LibraryViewModel"
-             x:Name="LibraryView"
-             >
+             x:Name="LibraryView">
     <ContentPage.Behaviors>
-        <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Dark={StaticResource Black}, Light=White}" StatusBarStyle="{AppThemeBinding Dark=LightContent, Light=DarkContent}"/>
+        <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Dark={StaticResource Black}, Light=White}"
+                                   StatusBarStyle="{AppThemeBinding Dark=LightContent, Light=DarkContent}" />
     </ContentPage.Behaviors>
 
-    <Grid
-        ColumnDefinitions="*"
-        
-        RowDefinitions="*,Auto"
-        RowSpacing="0">
+    <Grid ColumnDefinitions="*"
+          RowDefinitions="*,Auto"
+          RowSpacing="0">
 
 
-            <CollectionView ItemsSource="{Binding Books}"
-                            SelectionMode="None"
-                            Grid.ColumnSpan="2"
-                            Grid.Column="0">
-                
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="model:Book">
-                        <SwipeView>
+        <CollectionView ItemsSource="{Binding Books}"
+                        SelectionMode="None"
+                        Grid.ColumnSpan="2"
+                        Grid.Column="0">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:Book">
+                    <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems Mode="Reveal">
                                 <!--<SwipeItem IconImageSource="icons_waste.png"
@@ -35,40 +33,64 @@
                                 <SwipeItemView HeightRequest="100"
                                                Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.DeleteLastBookCommand}"
                                                CommandParameter="{Binding}">
-                                    <Frame BorderColor="Red" BackgroundColor="Transparent" CornerRadius="20" HeightRequest="100"
-                                           >
-                                        <Image Source="icons_waste.png"/>
+                                    <Frame BorderColor="Red"
+                                           BackgroundColor="Transparent"
+                                           CornerRadius="20"
+                                           HeightRequest="100">
+                                        <Image Source="icons_waste.png" />
                                     </Frame>
                                 </SwipeItemView>
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <VerticalStackLayout HorizontalOptions="Start">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10" Padding="10">
-                            <Image Source="{Binding PicturePath}" WidthRequest="140" HeightRequest="200" Grid.Column="0"/>
-                            <VerticalStackLayout Grid.Column="1" Spacing="10">
-                                <Label Text="{Binding  Title}" />
-                                <Label Text="{Binding Description}"/>
-                            </VerticalStackLayout>
-                        </Grid>
-                    </VerticalStackLayout>
-                        </SwipeView>
+                            <Grid ColumnDefinitions="Auto,*"
+                                  ColumnSpacing="10"
+                                  Padding="10">
+                                <Image Source="{Binding PicturePath}"
+                                       WidthRequest="140"
+                                       HeightRequest="200"
+                                       Grid.Column="0" />
+                                <VerticalStackLayout Grid.Column="1"
+                                                     Spacing="10">
+                                    <Label Text="{Binding  Title}"
+                                           FontSize="16"
+                                           FontAttributes="Bold" />
+                                    <Label>
+                                        <Label.Text>
+                                            <MultiBinding StringFormat="{}Chapters {0}\{1}">
+                                                <Binding Path="Readed" />
+                                                <Binding Path="Chapters" />
+                                            </MultiBinding>
+                                        </Label.Text>
+                                    </Label>
 
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                                </VerticalStackLayout>
+                                <Button Style="{StaticResource BtnStyle}"
+                                        Grid.Column="1"
+                                        VerticalOptions="End"
+                                        HorizontalOptions="Start"
+                                        Text="Continue reading"
+                                        WidthRequest="170"
+                                        Margin="0,0,0,5"/>
+                            </Grid>
+                        </VerticalStackLayout>
+                    </SwipeView>
 
-        
-        <HorizontalStackLayout Grid.Row="1" HorizontalOptions="End">
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+        <HorizontalStackLayout Grid.Row="1"
+                               HorizontalOptions="End">
 
         </HorizontalStackLayout>
         <ActivityIndicator IsVisible="{Binding IsBusy}"
                            IsRunning="{Binding IsBusy}"
-                           
                            HorizontalOptions="Fill"
                            VerticalOptions="Center"
                            Grid.RowSpan="2"
-                           Grid.ColumnSpan="2"
-                           />
+                           Grid.ColumnSpan="2" />
         <!--<ActivityIndicator IsVisible="True"
                            IsRunning="True"
                            

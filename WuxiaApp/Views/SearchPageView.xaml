@@ -2,9 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodel="clr-namespace:WuxiaApp.ViewModels"
              x:Class="WuxiaApp.Views.SearchPageView"
              Title="SearchPageView"
+             x:Name="page"
              x:DataType="viewmodel:SearchPageViewModel">
 
 
@@ -18,13 +20,19 @@
 
 
 
-
+        <!--                        SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem.Slug}"
+                        SelectionChanged="Coll_SelectionChanged"-->
 
 
         <CollectionView ItemsSource="{Binding Books}"
-                        SelectionMode="None"
+                        SelectionMode="Single"
                         Grid.Row="1"
-                        x:Name="Coll">
+                        x:Name="Coll"
+                        SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem.Slug}"
+                        SelectionChanged="Coll_SelectionChanged"
+                        >
 
             <!--<CollectionView.ItemsLayout>
                 <GridItemsLayout 
@@ -41,6 +49,7 @@
                           ColumnSpacing="10"
                           Padding="10"
                           HeightRequest="200">
+                        
                         <Image Source="{Binding PicturePath}"
                                WidthRequest="140"
                                Grid.Column="0"
@@ -121,7 +130,7 @@
                            IsRunning="{Binding IsBusy}"
                            Grid.RowSpan="2"
                            HorizontalOptions="Fill"
-                           VerticalOptions="Center"/>
+                           VerticalOptions="Center" />
 
     </Grid>
     <!--</Grid>-->

@@ -7,10 +7,32 @@
              xmlns:model="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
              x:DataType="viewmodel:LibraryViewModel"
              x:Name="LibraryView">
+
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Dark={StaticResource Black}, Light=White}"
                                    StatusBarStyle="{AppThemeBinding Dark=LightContent, Light=DarkContent}" />
     </ContentPage.Behaviors>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:MultiMathExpressionConverter x:Key="MultiMathExpressionConverter" />
+            <Style TargetType="Label"
+                   x:Key="TitleLabelStyle">
+                <Setter Property="FontSize"
+                        Value="17" />
+                <Setter Property="FontAttributes"
+                        Value="Bold" />
+                <Setter Property="Margin"
+                        Value="0,0,0,10" />
+            </Style>
+            <Style TargetType="Label"
+                   x:Key="DescriptionStyle">
+                <Setter Property="FontSize"
+                        Value="13" />
+                <Setter Property="TextColor"
+                        Value="{AppThemeBinding Light={StaticResource Gray600},Dark={StaticResource Gray100}}"/>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <Grid ColumnDefinitions="*"
           RowDefinitions="*,Auto"
@@ -29,7 +51,8 @@
                             <SwipeItems Mode="Reveal">
                                 <!--<SwipeItem IconImageSource="icons_waste.png"
                                            Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.DeleteLastBookCommand}"
-                                           CommandParameter="{Binding}" />-->
+                                           CommandParameter="{Binding}" 
+                                           BackgroundColor="White"/>-->
                                 <SwipeItemView HeightRequest="100"
                                                Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.DeleteLastBookCommand}"
                                                CommandParameter="{Binding}">
@@ -43,7 +66,7 @@
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <VerticalStackLayout HorizontalOptions="Start">
-                            <Grid ColumnDefinitions="Auto,*"
+                            <Grid ColumnDefinitions="Auto,200"
                                   ColumnSpacing="10"
                                   Padding="10">
                                 <Image Source="{Binding PicturePath}"
@@ -51,11 +74,44 @@
                                        HeightRequest="200"
                                        Grid.Column="0" />
                                 <VerticalStackLayout Grid.Column="1"
-                                                     Spacing="10">
+                                                     Spacing="2">
                                     <Label Text="{Binding  Title}"
-                                           FontSize="16"
-                                           FontAttributes="Bold" />
+                                           Style="{StaticResource TitleLabelStyle}" />
+                                    <Label LineBreakMode="TailTruncation">
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Author: "
+                                                      Style="{StaticResource DescriptionStyle}"
+                                                      FontAttributes="Bold" />
+                                                <Span Text="{Binding Author.name}"
+                                                      Style="{StaticResource DescriptionStyle}" 
+                                                      />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
                                     <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="Last update: "
+                                                      FontAttributes="Bold"
+                                                      Style="{StaticResource DescriptionStyle}" />
+                                                <Span Text="{Binding LastUpdate, StringFormat='{0:dd/MM/yyyy}'}"
+                                                      Style="{StaticResource DescriptionStyle}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>
+                                    </Label>
+
+                                </VerticalStackLayout>
+                                <VerticalStackLayout VerticalOptions="End"
+                                                     Grid.Column="1"
+                                                     HorizontalOptions="Start">
+
+
+
+
+                                    <Label  VerticalOptions="End"
+                                            Style="{StaticResource DescriptionStyle}"
+                                            TextColor="{StaticResource PrimaryLighted}">
                                         <Label.Text>
                                             <MultiBinding StringFormat="{}Chapters {0}\{1}">
                                                 <Binding Path="Readed" />
@@ -63,15 +119,27 @@
                                             </MultiBinding>
                                         </Label.Text>
                                     </Label>
+                                    <ProgressBar ProgressColor="{StaticResource PrimaryLighted}"
+                                                 HeightRequest="0"
+                                                 Margin="0,5,0,10"
+                                                 WidthRequest="170">
+                                        <ProgressBar.Progress>
+                                            <MultiBinding Converter="{StaticResource MultiMathExpressionConverter}"
+                                                          ConverterParameter="x0 / x1">
+                                                <Binding Path="Readed" />
+                                                <Binding Path="Chapters" />
+                                            </MultiBinding>
+                                        </ProgressBar.Progress>
+                                    </ProgressBar>
 
+
+                                    <Button Style="{StaticResource BtnStyle}"
+                                            VerticalOptions="End"
+                                            HorizontalOptions="Start"
+                                            Text="Continue reading"
+                                            WidthRequest="170"
+                                            Margin="0,0,0,5" />
                                 </VerticalStackLayout>
-                                <Button Style="{StaticResource BtnStyle}"
-                                        Grid.Column="1"
-                                        VerticalOptions="End"
-                                        HorizontalOptions="Start"
-                                        Text="Continue reading"
-                                        WidthRequest="170"
-                                        Margin="0,0,0,5"/>
                             </Grid>
                         </VerticalStackLayout>
                     </SwipeView>
@@ -80,11 +148,6 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-
-        <HorizontalStackLayout Grid.Row="1"
-                               HorizontalOptions="End">
-
-        </HorizontalStackLayout>
         <ActivityIndicator IsVisible="{Binding IsBusy}"
                            IsRunning="{Binding IsBusy}"
                            HorizontalOptions="Fill"

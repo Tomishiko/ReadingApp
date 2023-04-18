@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Data;
 
 public class WuxiaScraper
 {
@@ -126,14 +127,10 @@ public class WuxiaScraper
         var scripttext = _currentPage.DocumentNode.SelectSingleNode("//script[@id='__NEXT_DATA__']")?.InnerText;
         if(scripttext == null)
             throw new NullReferenceException($"Cant get next data {nameof(scripttext)} is null");
-        T deserialized;
-        //try
-        //{
-            deserialized = JsonSerializer.Deserialize<T>(scripttext);
-            
+          var  deserialized = JsonSerializer.Deserialize<T>(scripttext);
+        if(deserialized == null)
+            throw new NullReferenceException($"{nameof(deserialized)} cant be null here");
 
-        //}catch(Exception ex) { Debug.WriteLine(ex.Message); }
-        
         return deserialized;    
         //[JSON].props.pageProps.dehydratedState.queries.[0].state.data
 

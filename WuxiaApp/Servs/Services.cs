@@ -132,15 +132,16 @@ public Services()
         return result;
 
     }
-
+    /// <summary>
+    ///  Forms path for picture
+    ///  
+    /// </summary>
+    /// <param name="slugName">slug name of the book</param>
+    /// <param name="picParam">picture quality parametr(preview or bigpic)</param>
+    /// <returns> A string representing uri path for picture</returns>
     public string FormPicturePath(string slugName,string picParam = "preview")
-    {   /// <summary>
-        ///  Forms path for picture
-        ///  
-        /// </summary>
-        /// <param name="slugName">slug name of the book</param>
-        /// <param name="picParam">picture quality parametr(preview or bigpic)</param>
-        /// <returns> A string representing uri path for picture</returns>
+    {   
+     
         ArgumentNullException.ThrowIfNull(slugName);
         return ImageParams["source"] + slugName + ImageParams[picParam];
     }

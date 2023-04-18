@@ -55,7 +55,8 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
                 FirstChapter = bookinfo.first_chapter,
                 LastUpdate = bookinfo.last_chap_updated,
                 Status = bookinfo.novelStatus,
-                Ranking = bookinfo.ranking
+                Ranking = bookinfo.ranking,
+                Slug = bookinfo.slug
             };
             if (bookinfo.image == null)
                 book.PicturePath = "unloaded_image.png";

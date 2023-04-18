@@ -15,10 +15,6 @@ public partial class SearchPageView : ContentPage
     
     private async void CollectionView_Scrolled(object sender, ItemsViewScrolledEventArgs e)
     {
-        double translation;
-        bool visibility;
-
-
         if (e.VerticalDelta > 15 && searchBar.IsVisible == true)
         {
             await searchBar.TranslateTo(searchBar.TranslationX, -70, 300);
@@ -35,28 +31,12 @@ public partial class SearchPageView : ContentPage
 
 
         }
-        //if (e.VerticalDelta > 15 && searchBar.IsVisible == true)
-        //{
-        //    translation = -70;
-        //    visibility = false;
-        //}
-        //else if (e.VerticalDelta < -15 && searchBar.IsVisible == false)
-        //{
-        //    translation = 0;
-        //    visibility = true;
-        //}
-        //else
-        //{
-        //    return;
-        //}
 
-        //await searchBar.TranslateTo(searchBar.TranslationX, translation, 300);
-        ////await Coll.TranslateTo(Coll.TranslationX, translation, 300);
+    }
 
-        //await Task.Delay(100);
-
-        //searchBar.IsVisible = visibility;
-
-
+    private void Coll_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+       
+        (sender as CollectionView).SelectedItem = null;
     }
 }

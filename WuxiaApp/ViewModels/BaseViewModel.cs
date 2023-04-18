@@ -10,7 +10,6 @@ public partial class BaseViewModel : ObservableObject
 
     [ObservableProperty]
     string title;
-    protected Dictionary<string, string> ImageParams;
     public bool IsNotBusy => !IsBusy;
 }
 

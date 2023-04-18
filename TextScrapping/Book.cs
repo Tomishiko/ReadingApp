@@ -2,7 +2,7 @@
 
 
 
-public class Book
+public class Book:IEquatable<Book>
 {
     public string Title { get; set; }
     public string Description { get; set; }
@@ -20,8 +20,10 @@ public class Book
     public string Status { get; set; }
     public int Ranking { get; set; }
 
-
-
+    public bool Equals(Book? other)
+    {
+        return this.Title == other.Title;
+    }
 }
 
 

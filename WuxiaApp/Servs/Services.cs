@@ -12,10 +12,18 @@ namespace WuxiaApp.Servs;
 public class Services
 {
     List<Book> bookList;
-    string api;
+    readonly string api;
     static HttpClient client;
-    
-    public Services()
+    readonly Dictionary<string,string> ImageParams = new()
+    {
+            ["preview"] = ".webp?width=150&quality=60",
+            ["bigpic"] = ".webp",
+            ["source"] = "https://wuxiaworldeu.b-cdn.net/original/"
+    };
+
+
+
+public Services()
     {
         api = "https://wuxia.click/api/";
         client = new HttpClient() { BaseAddress = new Uri(api) };
@@ -45,10 +53,9 @@ public class Services
         var query = new Dictionary<string, string>()
         {
             ["search"] = searchPattern,
-            ["limit"] = "10",
+            ["limit"] = limit,
             ["order"] = ordering,
-            ["category_name"] = category,
-            ["limit"]=limit
+            ["category_name"] = category
         };
         var querysrting = QueryHelpers.AddQueryString("search/", query);
         using var request = new HttpRequestMessage(HttpMethod.Get, querysrting);
@@ -83,14 +90,14 @@ public class Services
     public async Task CopyLibraryFileAsync(string sourceFile, string targetFileName)
     {
         using Stream fileStream = await FileSystem.Current.OpenAppPackageFileAsync(sourceFile);
-        using StreamReader reader = new StreamReader(fileStream);
+        using StreamReader reader = new(fileStream);
 
         string content = await reader.ReadToEndAsync();
 
         string targetFile = Path.Combine(FileSystem.Current.AppDataDirectory, targetFileName);
 
         using FileStream outputStream = File.OpenWrite(targetFile);
-        using StreamWriter streamWriter = new StreamWriter(outputStream);
+        using StreamWriter streamWriter = new(outputStream);
 
         await streamWriter.WriteAsync(content);
     }
@@ -124,6 +131,23 @@ public class Services
         var result = await response.Content.ReadFromJsonAsync<BookInfo>();
         return result;
 
+    }
+
+    public string FormPicturePath(string slugName,string picParam = "preview")
+    {   /// <summary>
+        ///  Forms path for picture
+        ///  
+        /// </summary>
+        /// <param name="slugName">slug name of the book</param>
+        /// <param name="picParam">picture quality parametr(preview or bigpic)</param>
+        /// <returns> A string representing uri path for picture</returns>
+        ArgumentNullException.ThrowIfNull(slugName);
+        return ImageParams["source"] + slugName + ImageParams[picParam];
+    }
+    public bool CheckBookInLib(Book book)
+    {
+        ArgumentNullException.ThrowIfNull(book);
+        return bookList.Contains(book);
     }
 }
 

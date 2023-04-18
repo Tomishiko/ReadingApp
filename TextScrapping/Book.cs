@@ -2,7 +2,7 @@
 
 
 
-public class Book:IEquatable<Book>
+public class Book: IEquatable<Book>
 {
     public string Title { get; set; }
     public string Description { get; set; }
@@ -22,7 +22,20 @@ public class Book:IEquatable<Book>
 
     public bool Equals(Book? other)
     {
-        return this.Title == other.Title;
+        return this.Slug == other?.Slug;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as Book);
+    }
+    public override string ToString()
+    {
+        return Title;
+    }
+    public override int GetHashCode()
+    {
+        return Slug.GetHashCode();
     }
 }
 

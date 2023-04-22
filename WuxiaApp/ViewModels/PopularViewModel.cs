@@ -21,6 +21,8 @@ public partial class UICollectionElement : ObservableObject
     string categoryName;
     [ObservableProperty]
     int opacity;
+    internal Uri nextDataChunk;
+
     public ICommand TriggerAnimationCommand { get; set; }
 
     public UICollectionElement(string category)
@@ -35,7 +37,6 @@ public partial class UICollectionElement : ObservableObject
 public partial class PopularViewModel : BaseViewModel
 {
     readonly Services services;
-
     public ObservableCollection<UICollectionElement> Data { get; } = new();
     public PopularViewModel(Services services)
     {
@@ -79,7 +80,8 @@ public partial class PopularViewModel : BaseViewModel
     {
         //List<Book> books = new();
         searchResult searchresult;
-        searchresult = await services.SearchBookAsync(category:searchPattern,ordering:order);
+        searchresult = await services.SearchBookAsync(category:searchPattern,ordering:order,limit:"4");
+        currentElement.nextDataChunk = new Uri(searchresult.next);
         foreach (var result in searchresult.results)
         {
             var book = new Book()
@@ -120,6 +122,33 @@ public partial class PopularViewModel : BaseViewModel
         await Shell.Current.GoToAsync(nameof(DetailsPage), query);
         
         //Shell.SetTabBarIsVisible(Shell.Current.CurrentPage,false);
+    }
+    [RelayCommand]
+    async Task LoadNextData(UICollectionElement currentElement)
+    {
+        if (IsBusy)
+            return;
+        var searchResult = await services.LoadNextData(currentElement.nextDataChunk);
+        currentElement.nextDataChunk = new Uri(searchResult.next);
+        foreach (var result in searchResult.results)
+        {
+            var book = new Book()
+            {
+                Chapters = result.chapters,
+                Description = result.description,
+                Ratings = result.rating,
+                Title = result.name,
+                Views = result.views,
+                Slug = result.slug
+            };
+            if (result.image == null)
+                book.PicturePath = "unloaded_image.png";
+            else
+                book.PicturePath = services.FormPicturePath(result.slug);
+            currentElement.Books.Add(book);
+        }
+
+
     }
 
 }

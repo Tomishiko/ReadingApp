@@ -29,17 +29,11 @@
                                             Opacity="0"
                                             SelectionChangedCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PopularViewModel}},Path= NavigateToDetailsCommand}"
                                             SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem.Slug}"
-                                            SelectionChanged="CollectionView_SelectionChanged">
+                                            SelectionChanged="CollectionView_SelectionChanged"
+                                            RemainingItemsThreshold="2"
+                                            RemainingItemsThresholdReachedCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PopularViewModel}},Path= LoadNextDataCommand}"
+                                            RemainingItemsThresholdReachedCommandParameter="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:UICollectionElement}}}">
                                 
-                                
-                                <!--<CollectionView.Behaviors>
-                                    <toolkit:AnimationBehavior AnimateCommand="{Binding TriggerAnimationCommand}">
-                                        <toolkit:AnimationBehavior.AnimationType>
-                                            <toolkit:FadeAnimation />
-                                        </toolkit:AnimationBehavior.AnimationType>
-                                        
-                                    </toolkit:AnimationBehavior>
-                                </CollectionView.Behaviors>-->
 
                                 <CollectionView.ItemsLayout>
                                     <GridItemsLayout Orientation="Horizontal"

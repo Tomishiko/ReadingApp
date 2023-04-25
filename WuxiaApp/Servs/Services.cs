@@ -117,10 +117,15 @@ public Services()
         await writer.WriteLineAsync(content);
 
     }
+    /// <summary>
+    /// Adds a new book to the library
+    /// </summary>
+    /// <param name="book"> Book object to be added</param>
+    /// <exception cref="ArgumentException"></exception>
     public void AddNewBook(Book book)
     {
         if (bookList.Contains(book))
-            return;
+            throw new ArgumentException($"Error book {book.Title} is already present is the library");
         bookList.Add(book);
     }
     public async Task<BookInfo> GetBookInfoAsync(string name)
@@ -132,15 +137,16 @@ public Services()
         return result;
 
     }
-
+    /// <summary>
+    ///  Forms path for picture
+    ///  
+    /// </summary>
+    /// <param name="slugName">slug name of the book</param>
+    /// <param name="picParam">picture quality parametr(preview or bigpic)</param>
+    /// <returns> A string representing uri path for picture</returns>
+    /// <exception cref="ArgumentException"></exception>
     public string FormPicturePath(string slugName,string picParam = "preview")
-    {   /// <summary>
-        ///  Forms path for picture
-        ///  
-        /// </summary>
-        /// <param name="slugName">slug name of the book</param>
-        /// <param name="picParam">picture quality parametr(preview or bigpic)</param>
-        /// <returns> A string representing uri path for picture</returns>
+    {   
         ArgumentNullException.ThrowIfNull(slugName);
         return ImageParams["source"] + slugName + ImageParams[picParam];
     }

@@ -7,6 +7,7 @@ using WuxiaClassLib.DataModels;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Headers;
 using System.Xml.Linq;
+using CommunityToolkit.Maui.Converters;
 
 namespace WuxiaApp.Servs;
 public class Services
@@ -104,6 +105,8 @@ public Services()
 
     public void DeleteBook(Book book)
     {
+        if (!bookList.Contains(book))
+            throw new ArgumentException($"There is no book {book.Title} by {book.Author.name} in the library");
         bookList?.Remove(book);
        
     }
@@ -125,7 +128,7 @@ public Services()
     public void AddNewBook(Book book)
     {
         if (bookList.Contains(book))
-            throw new ArgumentException($"Error book {book.Title} is already present is the library");
+            throw new ArgumentException($"Error book {book.Title} by {book.Author.name} is already present is the library");
         bookList.Add(book);
     }
     public async Task<BookInfo> GetBookInfoAsync(string name)

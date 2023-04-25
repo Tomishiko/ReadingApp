@@ -34,6 +34,7 @@ namespace WuxiaApp
             builder.Services.AddSingleton<SearchPageView>();
             builder.Services.AddTransient<DetailsViewModel>();
             builder.Services.AddTransient<DetailsPage>();
+            builder.Services.AddSingleton(Connectivity.Current);
          
 
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls13;

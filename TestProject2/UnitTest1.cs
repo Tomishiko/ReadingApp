@@ -55,5 +55,11 @@ namespace TestProject2
             service.FormPicturePath("blah",null)
                 );
         }
+        [Fact]
+        public async void NextDataMethodReturnsProperResult()
+        {
+           var service = new Services();
+           var output = await service.LoadNextDataAsync(new Uri("http://wuxia.click/api/search/?limit=10&offset=10&search=mar"));
+        }
     }
 }

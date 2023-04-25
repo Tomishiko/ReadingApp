@@ -149,5 +149,17 @@ public Services()
         ArgumentNullException.ThrowIfNull(book);
         return bookList.Contains(book);
     }
+    public async Task<searchResult> LoadNextDataAsync(Uri path)
+    {
+        
+        using var response = await client.GetAsync("search/"+path.Query);
+
+        response.EnsureSuccessStatusCode();
+
+        var jsonObject = await response.Content.ReadFromJsonAsync<searchResult>();
+
+
+        return jsonObject;
+    }
 }
 

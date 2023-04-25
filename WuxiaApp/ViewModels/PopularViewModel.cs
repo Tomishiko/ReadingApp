@@ -16,11 +16,15 @@ public partial class UICollectionElement : ObservableObject
     [ObservableProperty]
     bool isLoading;
     public bool IsNotLoading => !IsLoading;
+    [ObservableProperty]
+    bool isLoadingNewData;
     public ObservableCollection<Book> Books { get; }
     [ObservableProperty]
     string categoryName;
     [ObservableProperty]
     int opacity;
+    internal Uri nextDataChunk;
+
     public ICommand TriggerAnimationCommand { get; set; }
 
     public UICollectionElement(string category)
@@ -35,7 +39,6 @@ public partial class UICollectionElement : ObservableObject
 public partial class PopularViewModel : BaseViewModel
 {
     readonly Services services;
-
     public ObservableCollection<UICollectionElement> Data { get; } = new();
     public PopularViewModel(Services services)
     {
@@ -54,7 +57,7 @@ public partial class PopularViewModel : BaseViewModel
         Data.Add(new UICollectionElement("Top viewed Novels"));
         try
         {
-            
+
             IsBusy = true;
             tasks.Add(populateBooks(Data[0], order: "-weekly_views"));
             tasks.Add(populateBooks(Data[1]));
@@ -66,7 +69,7 @@ public partial class PopularViewModel : BaseViewModel
             await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
 
         }
-        finally 
+        finally
         {
             await Task.WhenAll(tasks);
             IsBusy = false;
@@ -74,12 +77,13 @@ public partial class PopularViewModel : BaseViewModel
         }
     }
 
-    async Task populateBooks(UICollectionElement currentElement,string searchPattern = "", 
+    async Task populateBooks(UICollectionElement currentElement, string searchPattern = "",
         string order = "-total_views")
     {
         //List<Book> books = new();
         searchResult searchresult;
-        searchresult = await services.SearchBookAsync(category:searchPattern,ordering:order);
+        searchresult = await services.SearchBookAsync(category: searchPattern, ordering: order, limit: "4");
+        currentElement.nextDataChunk = new Uri(searchresult.next);
         foreach (var result in searchresult.results)
         {
             var book = new Book()
@@ -97,7 +101,7 @@ public partial class PopularViewModel : BaseViewModel
                 book.PicturePath = services.FormPicturePath(result.slug);
             currentElement.Books.Add(book);
         }
-        
+
         //currentElement.TriggerAnimationCommand.Execute(null);
         currentElement.IsLoading = false;
 
@@ -109,7 +113,7 @@ public partial class PopularViewModel : BaseViewModel
     [RelayCommand]
     async Task NavigateToDetails(string bookSlug)
     {
-        
+
         if (bookSlug == null)
             return;
 
@@ -118,8 +122,45 @@ public partial class PopularViewModel : BaseViewModel
             { "slug", bookSlug }
         };
         await Shell.Current.GoToAsync(nameof(DetailsPage), query);
-        
+
         //Shell.SetTabBarIsVisible(Shell.Current.CurrentPage,false);
     }
+    [RelayCommand]
+    async Task LoadNextData(UICollectionElement currentElement)
+    {
+        if (IsBusy)
+            return;
+        currentElement.IsLoadingNewData = true;
+        try
+        {
+            var searchResult = await services.LoadNextDataAsync(currentElement.nextDataChunk);
+            currentElement.nextDataChunk = new Uri(searchResult.next);
+            foreach (var result in searchResult.results)
+            {
+                var book = new Book()
+                {
+                    Chapters = result.chapters,
+                    Description = result.description,
+                    Ratings = result.rating,
+                    Title = result.name,
+                    Views = result.views,
+                    Slug = result.slug
+                };
+                if (result.image == null)
+                    book.PicturePath = "unloaded_image.png";
+                else
+                    book.PicturePath = services.FormPicturePath(result.slug);
+                currentElement.Books.Add(book);
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Unable to get books: {ex.Message}");
+            await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
 
+
+        }
+        finally { currentElement.IsLoadingNewData = false; }
+
+    }
 }

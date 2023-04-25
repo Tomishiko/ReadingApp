@@ -10,19 +10,11 @@
              x:DataType="viewmodel:SearchPageViewModel">
 
 
-    <!--<Grid x:Name="grid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" x:Name="firstRow"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>-->
+    
+    
     <Grid RowDefinitions="55,*"
           x:Name="mainGrid">
 
-
-
-        <!--                        SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
-                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem.Slug}"
-                        SelectionChanged="Coll_SelectionChanged"-->
 
 
         <CollectionView ItemsSource="{Binding Books}"
@@ -32,7 +24,22 @@
                         SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem.Slug}"
                         SelectionChanged="Coll_SelectionChanged"
-                        >
+                        RemainingItemsThreshold="3"
+                        RemainingItemsThresholdReachedCommand="{Binding LoadNextDataChunkCommand}">
+            <CollectionView.Footer>
+                <ActivityIndicator IsVisible="{Binding IsLoadingNewData}"
+                                   IsRunning="True" 
+                                   HeightRequest="{Binding Footer}"
+                                   WidthRequest="50"/>
+            </CollectionView.Footer>
+
+            <CollectionView.Header>
+                <VerticalStackLayout>
+                <ActivityIndicator IsVisible="{Binding IsBusy}"
+                                   IsRunning="{Binding IsBusy}"
+                                   HeightRequest="50" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
 
             <!--<CollectionView.ItemsLayout>
                 <GridItemsLayout 
@@ -126,12 +133,11 @@
                      BackgroundColor="Transparent"
                      Source="icon_sort_light.png"
                      IsEnabled="{Binding IsBusy}" />
-        <ActivityIndicator IsVisible="{Binding IsBusy}"
+        <!--<ActivityIndicator IsVisible="{Binding IsBusy}"
                            IsRunning="{Binding IsBusy}"
                            Grid.RowSpan="2"
                            HorizontalOptions="Fill"
-                           VerticalOptions="Center" />
-
+                           VerticalOptions="Center" />-->
     </Grid>
     <!--</Grid>-->
 

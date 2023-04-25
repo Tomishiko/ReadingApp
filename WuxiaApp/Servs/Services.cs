@@ -149,7 +149,7 @@ public Services()
         ArgumentNullException.ThrowIfNull(book);
         return bookList.Contains(book);
     }
-    public async Task<searchResult> LoadNextData(Uri path)
+    public async Task<searchResult> LoadNextDataAsync(Uri path)
     {
         
         using var response = await client.GetAsync("search/"+path.Query);

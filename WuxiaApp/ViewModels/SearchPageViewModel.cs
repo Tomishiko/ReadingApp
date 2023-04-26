@@ -99,7 +99,7 @@ public partial class SearchPageViewModel : BaseViewModel
     //    };
     //    await Shell.Current.GoToAsync(nameof(DetailsPage), query);
 
-    }
+    
     [RelayCommand]
     async Task LoadNextDataChunkAsync()
     {

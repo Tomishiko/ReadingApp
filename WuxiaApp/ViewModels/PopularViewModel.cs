@@ -111,21 +111,6 @@ public partial class PopularViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    async Task NavigateToDetails(string bookSlug)
-    {
-
-        if (bookSlug == null)
-            return;
-
-        var query = new Dictionary<string, object>
-        {
-            { "slug", bookSlug }
-        };
-        await Shell.Current.GoToAsync(nameof(DetailsPage), query);
-
-        //Shell.SetTabBarIsVisible(Shell.Current.CurrentPage,false);
-    }
-    [RelayCommand]
     async Task LoadNextData(UICollectionElement currentElement)
     {
         if (IsBusy)

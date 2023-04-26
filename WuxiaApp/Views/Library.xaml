@@ -40,9 +40,12 @@
 
 
         <CollectionView ItemsSource="{Binding Books}"
-                        SelectionMode="None"
+                        SelectionMode="Single"
                         Grid.ColumnSpan="2"
-                        Grid.Column="0">
+                        Grid.Column="0"
+                        SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem}"
+                        SelectionChanged="CollectionView_SelectionChanged">
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Book">

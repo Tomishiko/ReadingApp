@@ -25,5 +25,10 @@ namespace WuxiaApp.Views
             
             
         }
+
+        private void CollectionView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            (sender as CollectionView).SelectedItem = null;
+        }
     }
 }

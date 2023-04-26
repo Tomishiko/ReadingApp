@@ -22,7 +22,7 @@
                         Grid.Row="1"
                         x:Name="Coll"
                         SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
-                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem.Slug}"
+                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem}"
                         SelectionChanged="Coll_SelectionChanged"
                         RemainingItemsThreshold="3"
                         RemainingItemsThresholdReachedCommand="{Binding LoadNextDataChunkCommand}">

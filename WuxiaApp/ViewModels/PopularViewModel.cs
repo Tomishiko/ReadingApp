@@ -7,6 +7,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using WuxiaClassLib.DataModels;
 using System.Windows.Input;
 using WuxiaApp.Views;
+using Microsoft.Maui.Networking;
 
 namespace WuxiaApp.ViewModels;
 
@@ -39,17 +40,33 @@ public partial class UICollectionElement : ObservableObject
 public partial class PopularViewModel : BaseViewModel
 {
     readonly Services services;
+    IConnectivity connectivity;
     public ObservableCollection<UICollectionElement> Data { get; } = new();
-    public PopularViewModel(Services services)
+    public PopularViewModel(Services services,IConnectivity connectivity)
     {
+        this.connectivity = connectivity;
         this.services = services;
+        if (connectivity.NetworkAccess != NetworkAccess.Internet)
+        {
+            Shell.Current.DisplayAlert("No internet acces!", "Please check your internet acces and try again.", "ok");
+            connectivity.ConnectivityChanged += ConnectivityChanged;
+            return;
+        }
         Task.Run(async () => await GetBooksAsync());
-        Title = "Popular";
+    }
+
+    void ConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+    {
+        
+        if (e.NetworkAccess == NetworkAccess.Internet && Data.Count==0)
+            Task.Run(async () => await GetBooksAsync());
+       
     }
 
     [RelayCommand]
     async Task GetBooksAsync()
     {
+        
         List<Task> tasks = new();
         if (IsBusy)
             return;
@@ -81,6 +98,8 @@ public partial class PopularViewModel : BaseViewModel
         string order = "-total_views")
     {
         //List<Book> books = new();
+        if(currentElement.Books.Count !=0)
+            currentElement.Books.Clear();
         searchResult searchresult;
         searchresult = await services.SearchBookAsync(category: searchPattern, ordering: order, limit: "4");
         currentElement.nextDataChunk = new Uri(searchresult.next);
@@ -130,7 +149,13 @@ public partial class PopularViewModel : BaseViewModel
     {
         if (IsBusy)
             return;
-        currentElement.IsLoadingNewData = true;
+        if (connectivity.NetworkAccess != NetworkAccess.Internet)
+        {
+            await Shell.Current.DisplayAlert("No internet acces!", "Please check your internet acces and try again.", "ok");
+            return;
+        }
+
+            currentElement.IsLoadingNewData = true;
         try
         {
             var searchResult = await services.LoadNextDataAsync(currentElement.nextDataChunk);

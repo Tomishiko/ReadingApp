@@ -39,7 +39,6 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     {
         try
         {
-
             IsBusy = true;
             var bookinfo = await services.GetBookInfoAsync(name);
 

@@ -1,10 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Maui.Alerts;
 using General.DataModels;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using WuxiaApp.Servs;
 using WuxiaApp.Views;
+using CommunityToolkit.Maui.Core;
 #if ANDROID
 using Microsoft.Maui.Platform;
 #endif
@@ -22,12 +24,14 @@ public partial class SearchPageViewModel : BaseViewModel
     
     readonly Services services;
     Uri nextData;
+    IConnectivity connectivity;
+    IToast connectionToast;
     public SearchPageViewModel(Services services)
     {
+        //this.connectivity= connectivity;
         this.services = services;
         Title = "Search";
     }
-
 
 
     [RelayCommand]
@@ -36,6 +40,11 @@ public partial class SearchPageViewModel : BaseViewModel
 
         if (IsBusy)
             return;
+        if (!hasInternet)
+        {
+            await Shell.Current.DisplayAlert("No internet acces!", "Please check your internet acces and try again.", "ok");
+            return;
+        }
         if (Books.Count != 0)
             Books.Clear();
         try
@@ -89,6 +98,11 @@ public partial class SearchPageViewModel : BaseViewModel
     [RelayCommand]
     async Task NavigateToDetails(string bookSlug)
     {
+        if (!hasInternet)
+        {
+            await Shell.Current.DisplayAlert("No internet access!", "Please check your internet acces and try again.", "ok");
+            return;
+        }
 
         if (bookSlug == null)
             return;
@@ -103,7 +117,8 @@ public partial class SearchPageViewModel : BaseViewModel
     [RelayCommand]
     async Task LoadNextDataChunkAsync()
     {
-        if (IsBusy || nextData==null || IsLoadingNewData)
+
+        if (nextData==null)
         {
             Footer = 0;
             return;
@@ -113,6 +128,8 @@ public partial class SearchPageViewModel : BaseViewModel
         try
         {
             IsLoadingNewData = true;
+            if (!hasInternet)
+                return;
             var searchResult = await services.LoadNextDataAsync(nextData);
             nextData = searchResult.next == null ? null : new Uri(searchResult.next);
             foreach (var result in searchResult.results)

@@ -132,7 +132,12 @@ public partial class PopularViewModel : BaseViewModel
     [RelayCommand]
     async Task NavigateToDetails(string bookSlug)
     {
+        if(!hasInternet)
+        {
+            await Shell.Current.DisplayAlert("No internet acces!", "Please check your internet acces and try again.", "ok");
+            return;
 
+        }
         if (bookSlug == null)
             return;
 
@@ -149,9 +154,9 @@ public partial class PopularViewModel : BaseViewModel
     {
         if (IsBusy)
             return;
-        if (connectivity.NetworkAccess != NetworkAccess.Internet)
+        if (!hasInternet)
         {
-            await Shell.Current.DisplayAlert("No internet acces!", "Please check your internet acces and try again.", "ok");
+            //await Shell.Current.DisplayAlert("No internet acces!", "Please check your internet acces and try again.", "ok");
             return;
         }
 

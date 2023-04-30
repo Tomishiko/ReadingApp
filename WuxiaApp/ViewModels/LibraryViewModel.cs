@@ -12,7 +12,7 @@ public partial class LibraryViewModel : BaseViewModel
     public ObservableCollection<Book> Books { get; } = new();
     readonly Services services;
     readonly string libPath;
-    public LibraryViewModel(Services services)
+    public LibraryViewModel(Services services,IConnectivity connectivity):base(connectivity)
     {
         libPath = Path.Combine(FileSystem.Current.AppDataDirectory, "library.dat");
         this.services = services;

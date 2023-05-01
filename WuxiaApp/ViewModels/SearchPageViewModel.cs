@@ -24,11 +24,8 @@ public partial class SearchPageViewModel : BaseViewModel
     
     readonly Services services;
     Uri nextData;
-    IConnectivity connectivity;
-    IToast connectionToast;
     public SearchPageViewModel(Services services)
     {
-        //this.connectivity= connectivity;
         this.services = services;
         Title = "Search";
     }
@@ -95,18 +92,6 @@ public partial class SearchPageViewModel : BaseViewModel
         finally { IsBusy = false; }
     }
 
-    //[RelayCommand]
-    //async Task NavigateToDetails(string bookSlug)
-    //{
-
-    //    if (bookSlug == null)
-    //        return;
-
-    //    var query = new Dictionary<string, object>
-    //    {
-    //        { "slug", bookSlug }
-    //    };
-    //    await Shell.Current.GoToAsync(nameof(DetailsPage), query);
 
     
     [RelayCommand]

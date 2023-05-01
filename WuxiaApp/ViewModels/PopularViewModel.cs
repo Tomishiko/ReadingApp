@@ -6,8 +6,6 @@ using System.Diagnostics;
 using CommunityToolkit.Mvvm.ComponentModel;
 using WuxiaClassLib.DataModels;
 using System.Windows.Input;
-using WuxiaApp.Views;
-using Microsoft.Maui.Networking;
 
 namespace WuxiaApp.ViewModels;
 
@@ -40,11 +38,9 @@ public partial class UICollectionElement : ObservableObject
 public partial class PopularViewModel : BaseViewModel
 {
     readonly Services services;
-    IConnectivity connectivity;
     public ObservableCollection<UICollectionElement> Data { get; } = new();
     public PopularViewModel(Services services,IConnectivity connectivity)
     {
-        this.connectivity = connectivity;
         this.services = services;
         if (connectivity.NetworkAccess != NetworkAccess.Internet)
         {
@@ -132,15 +128,10 @@ public partial class PopularViewModel : BaseViewModel
     [RelayCommand]
     async Task LoadNextData(UICollectionElement currentElement)
     {
-        if (IsBusy)
+        if (IsBusy || !hasInternet)
             return;
-        if (!hasInternet)
-        {
-            //await Shell.Current.DisplayAlert("No internet acces!", "Please check your internet acces and try again.", "ok");
-            return;
-        }
 
-            currentElement.IsLoadingNewData = true;
+        currentElement.IsLoadingNewData = true;
         try
         {
             var searchResult = await services.LoadNextDataAsync(currentElement.nextDataChunk);

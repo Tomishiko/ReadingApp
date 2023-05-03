@@ -40,12 +40,13 @@
 
 
         <CollectionView ItemsSource="{Binding Books}"
-                        SelectionMode="Single"
                         Grid.ColumnSpan="2"
                         Grid.Column="0"
-                        SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
+                        SelectionMode="None">
+            <!--SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem}"
-                        SelectionChanged="CollectionView_SelectionChanged">
+                        SelectionChanged="CollectionView_SelectionChanged"-->
+
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Book">
@@ -72,6 +73,11 @@
                             <Grid ColumnDefinitions="Auto,200"
                                   ColumnSpacing="10"
                                   Padding="10">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.NavigateToDetailsCommand}"
+                                                          CommandParameter="{Binding .}" />
+
+                                </Grid.GestureRecognizers>
                                 <Image Source="{Binding PicturePath}"
                                        WidthRequest="140"
                                        HeightRequest="200"
@@ -141,7 +147,10 @@
                                             HorizontalOptions="Start"
                                             Text="Continue reading"
                                             WidthRequest="170"
-                                            Margin="0,0,0,5" />
+                                            Margin="0,0,0,5" 
+                                            
+                                            Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.ButtonClickedCommand}"
+                                            CommandParameter="{Binding .}"/>
                                 </VerticalStackLayout>
                             </Grid>
                         </VerticalStackLayout>

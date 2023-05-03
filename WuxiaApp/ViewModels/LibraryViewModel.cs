@@ -90,6 +90,11 @@ public partial class LibraryViewModel : BaseViewModel
         }
         finally { IsBusy = false; }
     }
+    [RelayCommand]
+    async Task ButtonClickedAsync(Book book)
+    {
+       throw new NotImplementedException();
+    }
 
 }
 

@@ -12,7 +12,6 @@ namespace WuxiaApp.Views
         {
 
             InitializeComponent();
-            
             BindingContext = libraryViewModel;
         }
 

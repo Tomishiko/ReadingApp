@@ -27,7 +27,7 @@
                                             IsVisible="{Binding IsNotLoading}"
                                             Opacity="0"
                                             SelectionChangedCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PopularViewModel}},Path= NavigateToDetailsCommand}"
-                                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem.Slug}"
+                                            SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem}"
                                             SelectionChanged="CollectionView_SelectionChanged"
                                             RemainingItemsThreshold="2"
                                             RemainingItemsThresholdReachedCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:PopularViewModel}},Path= LoadNextDataCommand}"

@@ -9,6 +9,7 @@ namespace WuxiaApp
         {
             InitializeComponent();
             Routing.RegisterRoute(nameof(DetailsPage), typeof(DetailsPage));
+            Routing.RegisterRoute(nameof(ReadingView), typeof(ReadingView));
         }
     }
 }

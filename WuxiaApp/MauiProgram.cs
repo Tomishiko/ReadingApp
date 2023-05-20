@@ -34,6 +34,8 @@ namespace WuxiaApp
             builder.Services.AddSingleton<SearchPageView>();
             builder.Services.AddTransient<DetailsViewModel>();
             builder.Services.AddTransient<DetailsPage>();
+            builder.Services.AddTransient<ReadingView>();
+            builder.Services.AddTransient<ReadingViewModel>();
             builder.Services.AddSingleton(Connectivity.Current);
          
 

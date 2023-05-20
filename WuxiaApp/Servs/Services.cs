@@ -8,13 +8,17 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Headers;
 using System.Xml.Linq;
 using CommunityToolkit.Maui.Converters;
+using Scraper;
+using System.Text;
 
 namespace WuxiaApp.Servs;
 public class Services
 {
     List<Book> bookList;
     readonly string api;
+    readonly string hostSite;
     static HttpClient client;
+    WuxiaScraper scraper;
     readonly Dictionary<string,string> ImageParams = new()
     {
             ["preview"] = ".webp?width=150&quality=60",
@@ -27,9 +31,11 @@ public class Services
 public Services()
     {
         api = "https://wuxia.click/api/";
+        hostSite = "https://wuxia.click/";
         client = new HttpClient() { BaseAddress = new Uri(api) };
         client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
+        scraper = new WuxiaScraper();
 
         
     }
@@ -169,6 +175,20 @@ public Services()
 
 
         return jsonObject;
+    }
+    public async Task<ChapterData> FetchChapterAsync(string chapSlug)
+    {
+        //scraper.Load(hostSite + "chapter/" + chapSlug);
+        //return scraper.GetReadingPage();
+        scraper.SiteUri = new Uri(hostSite+ "chapter/" + chapSlug);
+        return await scraper.GetScriptContentDOMAsync<ChapterData>();
+    }
+
+    public void SaveReadedPoint(Book readedBook)
+    {
+        var result = bookList.Find(book => book.Slug == readedBook.Slug);
+        result.Readed = readedBook.Readed;
+        
     }
 }
 

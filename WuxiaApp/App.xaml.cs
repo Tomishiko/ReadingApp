@@ -13,13 +13,15 @@ namespace WuxiaApp
             this.services = services;
         }
 
-        protected override Window
-    CreateWindow(IActivationState activationState)
+        protected override Window CreateWindow(IActivationState activationState)
         {
             Window window = base.CreateWindow(activationState);
-            window.Stopped += async (sender, eventArgs) => {
-                await services.Save();
+            window.Deactivated += async (sender, eventArgs) => {
+                await Task.Run(() => services.Save());
             };
+            //window.Stopped += async (sender, eventArgs) => {
+            //    await services.Save();
+            //};
             return window;
         }
 

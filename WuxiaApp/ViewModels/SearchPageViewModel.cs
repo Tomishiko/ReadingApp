@@ -7,6 +7,7 @@ using System.Diagnostics;
 using WuxiaApp.Servs;
 using WuxiaApp.Views;
 using CommunityToolkit.Maui.Core;
+using Microsoft.Maui.Graphics.Text;
 #if ANDROID
 using Microsoft.Maui.Platform;
 #endif
@@ -58,7 +59,8 @@ public partial class SearchPageViewModel : BaseViewModel
         }
 #endif
             var searchresult = await services.SearchBookAsync(searchParam);
-            nextData = new Uri(searchresult.next);
+            if(searchresult.next is not null)
+                nextData = new Uri(searchresult.next);
             if (Books.Count != 0)
                 Books.Clear();
             foreach (var result in searchresult.results)
@@ -138,5 +140,6 @@ public partial class SearchPageViewModel : BaseViewModel
 
         
     }
+
 }
 

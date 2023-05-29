@@ -20,6 +20,16 @@ namespace WuxiaApp
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("segoeui.ttf", "SegoeRegular");
+                    fonts.AddFont("segoeuib.ttf", "SegoeBold");
+                    fonts.AddFont("seguisb.ttf", "SegoeSemiBold");
+                    fonts.AddFont("segoeuisl.ttf", "SegoeSemiLight");
+                    fonts.AddFont("segoepr.ttf", "SegoePrint");
+                    fonts.AddFont("arial.ttf", "Arial");
+                    fonts.AddFont("calibri.ttf", "Calibri");
+                    fonts.AddFont("Roboto-Regular.ttf", "Roboto");
+                    fonts.AddFont("tahoma.ttf", "Tahoma");
+                    fonts.AddFont("times.ttf", "TimesNewRoman");
                 });
 
 #if DEBUG

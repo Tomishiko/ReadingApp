@@ -16,7 +16,7 @@
                         <VerticalStackLayout>
                             <Label Text="{Binding CategoryName}"
                                    Padding="10,10,0,5"
-                                   FontAttributes="Bold"
+                                   FontFamily="SegoeSemiBold"
                                    FontSize="18" />
                             <ActivityIndicator IsRunning="{Binding IsLoading}"
                                                IsVisible="{Binding IsLoading}"
@@ -58,11 +58,10 @@
                                                    Grid.Column="0" />
 
                                             <Label Text="{Binding  Title}"
-                                                   Margin="0,5,0,0"
-                                                   FontAttributes="Bold"
+                                                   FontFamily="SegoeSemiBold"
                                                    FontSize="14"
                                                    Grid.Column="1"
-                                                   MaxLines="2"
+                                                   MaxLines="3"
                                                    LineBreakMode="WordWrap" />
                                             <Grid ColumnDefinitions="30,*"
                                                   RowDefinitions="*,*,*"

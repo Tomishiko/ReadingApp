@@ -9,7 +9,33 @@
     <Grid RowDefinitions="40,50,50"
           WidthRequest="300"
           Padding="10"
+          x:Name="grid"
           BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light={StaticResource Gray25}}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup Name="ValidityStates">
+                <VisualState Name="Valid">
+                    <VisualState.Setters>
+                        <Setter TargetName="entry"
+                                Property="Entry.TextColor"
+                                Value="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}" />
+                        <Setter TargetName="okButton"
+                                Property="Label.IsEnabled"
+                                Value="True" />
+                        
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState Name="Invalid">
+                    <VisualState.Setters>
+                        <Setter TargetName="entry"
+                                Property="Entry.TextColor"
+                                Value="Red" />
+                        <Setter TargetName="okButton"
+                                Property="Label.IsEnabled"
+                                Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
         <Label Text="Go to chapter"
                Grid.Row="0"
                VerticalTextAlignment="Center"

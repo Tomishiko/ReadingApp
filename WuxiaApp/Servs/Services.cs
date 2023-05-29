@@ -19,6 +19,10 @@ public class Services
     readonly string hostSite;
     static HttpClient client;
     WuxiaScraper scraper;
+    string _userFont;
+    double _userFontSize;
+    Color _color;
+
     readonly Dictionary<string,string> ImageParams = new()
     {
             ["preview"] = ".webp?width=150&quality=60",

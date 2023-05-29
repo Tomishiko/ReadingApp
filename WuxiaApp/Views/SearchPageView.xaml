@@ -10,8 +10,8 @@
              x:DataType="viewmodel:SearchPageViewModel">
 
 
-    
-    
+
+
     <Grid RowDefinitions="55,*"
           x:Name="mainGrid">
 
@@ -28,16 +28,16 @@
                         RemainingItemsThresholdReachedCommand="{Binding LoadNextDataChunkCommand}">
             <CollectionView.Footer>
                 <ActivityIndicator IsVisible="{Binding IsLoadingNewData}"
-                                   IsRunning="True" 
+                                   IsRunning="True"
                                    HeightRequest="{Binding Footer}"
-                                   WidthRequest="50"/>
+                                   WidthRequest="50" />
             </CollectionView.Footer>
 
             <CollectionView.Header>
                 <VerticalStackLayout>
-                <ActivityIndicator IsVisible="{Binding IsBusy}"
-                                   IsRunning="{Binding IsBusy}"
-                                   HeightRequest="50" />
+                    <ActivityIndicator IsVisible="{Binding IsBusy}"
+                                       IsRunning="{Binding IsBusy}"
+                                       HeightRequest="50" />
                 </VerticalStackLayout>
             </CollectionView.Header>
 
@@ -56,7 +56,7 @@
                           ColumnSpacing="10"
                           Padding="10"
                           HeightRequest="200">
-                        
+
                         <Image Source="{Binding PicturePath}"
                                WidthRequest="140"
                                Grid.Column="0"
@@ -64,9 +64,10 @@
                                SemanticProperties.Description="No Img Here">
                         </Image>
                         <Label Text="{Binding  Title}"
-                               Margin="0,5,0,0"
-                               FontAttributes="Bold"
+                               FontFamily="SegoeSemiBold"
                                FontSize="16"
+                               MaxLines="2"
+                               LineBreakMode="WordWrap"
                                Grid.Column="1" />
                         <Grid ColumnDefinitions="30,*"
                               RowDefinitions="*,*,*"

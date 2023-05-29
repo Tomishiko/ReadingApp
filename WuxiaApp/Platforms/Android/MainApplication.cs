@@ -1,6 +1,6 @@
 ﻿using Android.App;
 using Android.Runtime;
-
+//using [assembly: UsesPermission(Android.Manifest.Permission.Vibrate)]
 namespace WuxiaApp
 {
     [Application]

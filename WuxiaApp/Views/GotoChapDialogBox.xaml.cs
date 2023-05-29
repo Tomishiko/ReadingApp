@@ -10,11 +10,10 @@ public partial class GotoChapDialogBox : Popup
 {
     int result;
 	Style entryInvalid,entryValid;
-	Color original;
     public GotoChapDialogBox(Book book)
 	{
 		InitializeComponent();
-		original = entry.TextColor;
+        //VisualStateManager.GoToState(grid, "Valid");
         result = book.Readed;
         BindingContext = book;
 	}
@@ -37,13 +36,11 @@ public partial class GotoChapDialogBox : Popup
 		if (!int.TryParse(e.NewTextValue, out result) || result < 1 || result > (BindingContext as Book).Chapters)
 		{
 
-            entry.TextColor = Colors.Red;
-            okButton.IsEnabled = false;
+            VisualStateManager.GoToState(grid, "Invalid");
         }
         else
 		{
-            entry.TextColor = original;
-            okButton.IsEnabled = true;
+            VisualStateManager.GoToState(grid, "Valid");
             
         }
 

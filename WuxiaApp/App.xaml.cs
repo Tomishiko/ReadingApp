@@ -17,7 +17,7 @@ namespace WuxiaApp
         {
             Window window = base.CreateWindow(activationState);
             window.Deactivated += async (sender, eventArgs) => {
-                await Task.Run(() => services.Save());
+                await Task.Run(() => services.Save(FileSystem.Current));
             };
             //window.Stopped += async (sender, eventArgs) => {
             //    await services.Save();

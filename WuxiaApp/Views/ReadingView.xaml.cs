@@ -49,13 +49,17 @@ public partial class ReadingView : ContentPage
         };
         fontpicker.ItemsSource = fonts;
         this.services = services;
-        //if(services.UserProfileSet)
-        //{
-        //    CurrentFont = services.UserFont;
-        //    slider.Value = services.UserFontSize;
-        //}
-        CurrentFont = fonts[0];
-        slider.Value = 14;
+        if (services.UserProfileSet)
+        {
+            CurrentFont = services.UserFont;
+            slider.Value = services.UserFontSize;
+        }
+        else
+        {
+            CurrentFont = fonts[0];
+            slider.Value = 14;
+        }
+        
         Disappearing += ReadingView_Disappearing;
         BindingContext = viewModel;
 
@@ -63,7 +67,7 @@ public partial class ReadingView : ContentPage
 
     private void ReadingView_Disappearing(object sender, EventArgs e)
     {
-        //services.UpdatePreferences(CurrentFont, slider.Value,Color.FromRgb(0,0,0));
+        services.SetUserPreferences(CurrentFont, slider.Value,Color.FromRgb(0,0,0));
     }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)

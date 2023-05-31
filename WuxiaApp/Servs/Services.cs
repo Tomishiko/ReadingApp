@@ -18,7 +18,7 @@ public class Services
     WuxiaScraper scraper;
     string _userFont;
     double _userFontSize;
-    Color _color;
+    Color _userColor;
 
     readonly Dictionary<string, string> ImageParams = new()
     {
@@ -26,8 +26,10 @@ public class Services
         ["bigpic"] = ".webp",
         ["source"] = "https://wuxiaworldeu.b-cdn.net/original/"
     };
-
-
+    public bool UserProfileSet { get; set; }
+    public string UserFont { get => _userFont;  }
+    public double UserFontSize { get => _userFontSize;  }
+    public Color UserColor { get => _userColor;  }
 
     public Services()
     {
@@ -38,6 +40,7 @@ public class Services
             new MediaTypeWithQualityHeaderValue("application/json"));
         scraper = new WuxiaScraper();
         bookList = new List<Book>();
+        UserProfileSet = false;
     }
 
     public async Task<List<Book>> GetBooksLocalAsync(IFileSystem fileSystem)
@@ -47,8 +50,22 @@ public class Services
             return bookList;
         try
         {
+
             var contents = await File.ReadAllTextAsync(Path.Combine(fileSystem.AppDataDirectory, "library.dat"));
             bookList = JsonSerializer.Deserialize<List<Book>>(contents);
+            var path = Path.Combine(fileSystem.AppDataDirectory, "user_profile");
+            if (File.Exists(path))
+            {
+                using (var stream = File.Open(path, FileMode.Open))
+                {
+                    var reader = new BinaryReader(stream);
+                    _userFont = reader.ReadString();
+                    _userFontSize = reader.ReadDouble();
+                    _userColor = Color.FromUint(reader.ReadUInt32());
+                }
+                UserProfileSet = true;
+            }
+            
         }
         catch (Exception ex) { Debug.WriteLine(ex.Message); }
 
@@ -117,17 +134,29 @@ public class Services
 
     }
 
-    public async Task Save(IFileSystem fileSystem)
+    public void Save(IFileSystem fileSystem)
     {
         var content = JsonSerializer.Serialize(bookList);
         try
         {
-            using var stream = File.Open(
+            
+            using (var stream = File.Open(
             Path.Combine(fileSystem.AppDataDirectory, "library.dat"),
-            FileMode.Create);
-            using var writer = new StreamWriter(stream);
-            await writer.WriteLineAsync(content);
+            FileMode.Create))
+            {
+                using var writer = new StreamWriter(stream);
+                writer.WriteLine(content);
+            }
+            using (var stream = File.Open(
+            Path.Combine(fileSystem.AppDataDirectory, "user_profile"),
+            FileMode.Create))
+            {
+                var writer = new BinaryWriter(stream);
+                writer.Write(_userFont);
+                writer.Write(_userFontSize);
+                writer.Write(_userColor.ToUint());
 
+            }
         }
         catch (Exception ex)
         {
@@ -198,11 +227,12 @@ public class Services
         result.Readed = readedBook.Readed;
 
     }
-    public void SetUserPreferences(string font,double fontsize,Color color)
+    public void SetUserPreferences(string font, double fontsize, Color color)
     {
         _userFont = font;
         _userFontSize = fontsize;
-        _color = color;
+        _userColor = color;
+        UserProfileSet = true;
     }
 }
 

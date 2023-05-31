@@ -54,7 +54,7 @@ public partial class LibraryViewModel : BaseViewModel
         {
             IsBusy = true;
 
-            var books = await services.GetBooksLocalAsync();
+            var books = await services.GetBooksLocalAsync(FileSystem.Current);
             if (Books.Count != 0)
                 Books.Clear();
             foreach (var book in books)

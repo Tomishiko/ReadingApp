@@ -10,8 +10,7 @@ public partial class DetailsPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = vm;
-		this.vm=vm;
-		
+		this.vm=vm;		
 	}
 
     private void Button_Clicked(object sender, EventArgs e)

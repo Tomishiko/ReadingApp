@@ -18,34 +18,34 @@
             <Style TargetType="Label"
                    x:Key="TitleLabelStyle">
                 <Setter Property="FontSize"
-                        Value="17" />
-                <Setter Property="FontAttributes"
-                        Value="Bold" />
+                        Value="15" />
                 <Setter Property="Margin"
                         Value="0,0,0,10" />
+                <Setter Property="FontFamily"
+                        Value="SegoeSemiBold" />
+                <Setter Property="FontAttributes"
+                        Value="None" />
             </Style>
             <Style TargetType="Label"
                    x:Key="DescriptionStyle">
                 <Setter Property="FontSize"
                         Value="13" />
                 <Setter Property="TextColor"
-                        Value="{AppThemeBinding Light={StaticResource Gray600},Dark={StaticResource Gray100}}"/>
+                        Value="{AppThemeBinding Light={StaticResource Gray600},Dark={StaticResource Gray100}}" />
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <Grid ColumnDefinitions="*"
-          RowDefinitions="*,Auto"
+    <Grid RowDefinitions="*,Auto"
           RowSpacing="0">
 
 
         <CollectionView ItemsSource="{Binding Books}"
-                        SelectionMode="Single"
-                        Grid.ColumnSpan="2"
-                        Grid.Column="0"
-                        SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
+                        SelectionMode="None">
+            <!--SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
                         SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem}"
-                        SelectionChanged="CollectionView_SelectionChanged">
+                        SelectionChanged="CollectionView_SelectionChanged"-->
+
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Book">
@@ -69,17 +69,23 @@
                             </SwipeItems>
                         </SwipeView.RightItems>
                         <VerticalStackLayout HorizontalOptions="Start">
-                            <Grid ColumnDefinitions="Auto,200"
+                            <Grid ColumnDefinitions="150,220"
                                   ColumnSpacing="10"
-                                  Padding="10">
+                                  Padding="10,10,10,10">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.NavigateToDetailsCommand}"
+                                                          CommandParameter="{Binding .}" />
+
+                                </Grid.GestureRecognizers>
                                 <Image Source="{Binding PicturePath}"
-                                       WidthRequest="140"
-                                       HeightRequest="200"
+                                       WidthRequest="150"
+                                       HeightRequest="190"
                                        Grid.Column="0" />
                                 <VerticalStackLayout Grid.Column="1"
                                                      Spacing="2">
                                     <Label Text="{Binding  Title}"
-                                           Style="{StaticResource TitleLabelStyle}" />
+                                           Style="{StaticResource TitleLabelStyle}"
+                                           MaxLines="2" />
                                     <Label LineBreakMode="TailTruncation">
                                         <Label.FormattedText>
                                             <FormattedString>
@@ -87,8 +93,7 @@
                                                       Style="{StaticResource DescriptionStyle}"
                                                       FontAttributes="Bold" />
                                                 <Span Text="{Binding Author.name}"
-                                                      Style="{StaticResource DescriptionStyle}" 
-                                                      />
+                                                      Style="{StaticResource DescriptionStyle}" />
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
@@ -114,6 +119,7 @@
 
                                     <Label  VerticalOptions="End"
                                             Style="{StaticResource DescriptionStyle}"
+                                            FontFamily="SegoeSemiBold"
                                             TextColor="{StaticResource PrimaryLighted}">
                                         <Label.Text>
                                             <MultiBinding StringFormat="{}Chapters {0}\{1}">
@@ -141,7 +147,9 @@
                                             HorizontalOptions="Start"
                                             Text="Continue reading"
                                             WidthRequest="170"
-                                            Margin="0,0,0,5" />
+                                            Margin="0,0,0,5"
+                                            Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.ButtonClickedCommand}"
+                                            CommandParameter="{Binding .}" />
                                 </VerticalStackLayout>
                             </Grid>
                         </VerticalStackLayout>

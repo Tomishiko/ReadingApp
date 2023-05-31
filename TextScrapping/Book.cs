@@ -1,15 +1,30 @@
-﻿namespace General.DataModels;
+﻿using System.ComponentModel;
+namespace General.DataModels;
 
 
 
-public class Book: IEquatable<Book>
+public partial class Book: IEquatable<Book>,INotifyPropertyChanged
 {
+    public event PropertyChangedEventHandler? PropertyChanged;
     public string Title { get; set; }
     public string Description { get; set; }
     public string PicturePath { get; set; }
     public string Uri { get; set; }
     public string Ratings { get; set; }
-    public int Readed { get; set; } 
+    int readed;
+    public int Readed
+    {
+        get { return readed; }
+        set
+        {
+            if(readed != value)
+            {
+                readed = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Readed"));
+            }
+
+        }
+    }
     public int Chapters { get; set; }
     public string Views { get; set; }
     public string Slug { get; set; }    

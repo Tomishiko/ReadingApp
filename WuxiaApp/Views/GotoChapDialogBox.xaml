@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:datamodels="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="WuxiaApp.Views.GotoChapDialogBox"
+               x:DataType="datamodels:Book">
+
+    <Grid RowDefinitions="40,50,50"
+          WidthRequest="300"
+          Padding="10"
+          x:Name="grid"
+          BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light={StaticResource Gray25}}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup Name="ValidityStates">
+                <VisualState Name="Valid">
+                    <VisualState.Setters>
+                        <Setter TargetName="entry"
+                                Property="Entry.TextColor"
+                                Value="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}" />
+                        <Setter TargetName="okButton"
+                                Property="Label.IsEnabled"
+                                Value="True" />
+                        
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState Name="Invalid">
+                    <VisualState.Setters>
+                        <Setter TargetName="entry"
+                                Property="Entry.TextColor"
+                                Value="Red" />
+                        <Setter TargetName="okButton"
+                                Property="Label.IsEnabled"
+                                Value="False" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Label Text="Go to chapter"
+               Grid.Row="0"
+               VerticalTextAlignment="Center"
+               HorizontalTextAlignment="Center"
+               FontAttributes="Bold"
+               FontSize="16"
+               TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}" />
+        <HorizontalStackLayout Grid.Row="1">
+            <Entry Placeholder="{Binding Readed}"
+                   WidthRequest="100"
+                   HorizontalTextAlignment="End"
+                   VerticalTextAlignment="End"
+                   Keyboard="Numeric"
+                   x:Name="entry"
+                   TextChanged="entry_TextChanged">
+            </Entry>
+            <Label Text="{Binding Chapters, StringFormat='/{0} chapters'}"
+                   TextColor="{AppThemeBinding Dark={StaticResource White}, Light={StaticResource Black}}" 
+                   VerticalTextAlignment="End"
+                   FontSize="14"
+                   Padding="0,0,0,17"/>
+
+        </HorizontalStackLayout>
+        <HorizontalStackLayout HorizontalOptions="End"
+                               Spacing="50"
+                               Grid.Row="2"
+                               Margin="0,0,20,0">
+            <Label Text="Cancel"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource PrimaryLighted}"
+                   FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                </Label.GestureRecognizers>
+
+            </Label>
+            <Label Text="OK"
+                   x:Name="okButton"
+                   VerticalTextAlignment="Center"
+                   HorizontalTextAlignment="Center"
+                   TextColor="{StaticResource PrimaryLighted}"
+                   FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OK_TapGestureRecognizer" />
+                </Label.GestureRecognizers>
+
+            </Label>
+        </HorizontalStackLayout>
+    </Grid>
+</toolkit:Popup>

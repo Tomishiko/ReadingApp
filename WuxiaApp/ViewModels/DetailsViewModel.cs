@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using General.DataModels;
 using System.Diagnostics;
 using WuxiaApp.Servs;
-using WuxiaClassLib.DataModels;
+
 
 
 namespace WuxiaApp.ViewModels;
@@ -69,7 +69,10 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
                 AddButtonBehavior = false;
             }
             else
+            {
                 AddButtonText = "Add to your library";
+                Book.Readed = 1;
+            }
         }
         catch (Exception ex)
         {

@@ -5,7 +5,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Data;
+using System.Text;
+using System.Text.Json.Nodes;
 
 public class WuxiaScraper
 {
@@ -13,34 +14,48 @@ public class WuxiaScraper
     private  HtmlDocument _currentPage;
     private  Uri _siteUri;
 
+    public Uri SiteUri { get => _siteUri; set => _siteUri = value; }
+
+    /// <summary>
+    /// Creates an instance of WuxiaScraper and 
+    /// immediately loads page
+    /// </summary>
+    /// <param name="link"> Link to the page to be scraped</param>
     public WuxiaScraper(string link)
     {
         _web = new HtmlWeb();
-        //_currentPage = _web.Load(link);
+        _currentPage = _web.Load(link);
         _siteUri = new Uri(link);
        
     }
 
-    public  void Reload()
-    {
-        _currentPage =  _web.Load(_siteUri);
-    }
-    public void Reload(string newLink)
+    /// <summary>
+    /// Creates an empty instance of WuxiaScraper
+    /// </summary>
+    public WuxiaScraper()
     {
         _web = new HtmlWeb();
-        //_currentPage = _web.Load(newLink);
-        _siteUri = new Uri(newLink);
     }
 
 
-    public string[] GetReadingPage()
+
+    /// <summary>
+    /// Gets text from reading page uri
+    /// </summary>
+    /// <returns>Tuple contains text and chapter name</returns>
+    
+    public (StringBuilder,string) GetReadingPage()
     {
+        if(_currentPage is null)
+            _currentPage = _web.Load(_siteUri);
         var Nodes = _currentPage.DocumentNode.SelectNodes("//div[@id='chapterText']");
-        var Text = new string[Nodes.Count];
-        for(int i=0;i<Nodes.Count; i++)
-            Text[i] = Nodes[i].InnerText;
-       
-        return Text;
+        var Text = new StringBuilder();
+        var chapName = Nodes[0].InnerText;
+        for(int i=1;i<Nodes.Count; i++)
+            Text.AppendLine(Nodes[i].InnerText);
+        
+
+        return (Text, chapName);
     }
 
     public async Task<Book> GetBookOverview()
@@ -125,15 +140,47 @@ public class WuxiaScraper
             throw new HttpRequestException($"Unable to get script content, http status code was {_web.StatusCode}");
         }
         var scripttext = _currentPage.DocumentNode.SelectSingleNode("//script[@id='__NEXT_DATA__']")?.InnerText;
+
         if(scripttext == null)
             throw new NullReferenceException($"Cant get next data {nameof(scripttext)} is null");
+
           var  deserialized = JsonSerializer.Deserialize<T>(scripttext);
+
         if(deserialized == null)
             throw new NullReferenceException($"{nameof(deserialized)} cant be null here");
 
         return deserialized;    
         //[JSON].props.pageProps.dehydratedState.queries.[0].state.data
 
+
+    }
+
+
+    public async  Task<T> GetScriptContentDOMAsync<T>()
+    {
+         _currentPage = await _web.LoadFromWebAsync(_siteUri.AbsoluteUri);
+            
+        if (_web.StatusCode != HttpStatusCode.OK)
+        {
+            Debug.WriteLine($"Unable to get script content, http status code was {_web.StatusCode}");
+            throw new HttpRequestException($"Unable to get script content, http status code was {_web.StatusCode}");
+        }
+        var scripttext = _currentPage.DocumentNode.SelectSingleNode("//script[@id='__NEXT_DATA__']")?.InnerText;
+
+        if (scripttext is null)
+            throw new NullReferenceException($"Cant get next data {nameof(scripttext)} is null");
+
+        //var deserialized = JsonSerializer.Deserialize<T>(scripttext);
+
+        JsonNode pageDOM = JsonNode.Parse(scripttext);
+        var dataNode = pageDOM["props"]["pageProps"]["dehydratedState"]["queries"][0]["state"]["data"];
+        var deserialized = dataNode.Deserialize<T>();
+        if (deserialized == null)
+            throw new NullReferenceException($"{nameof(deserialized)} cant be null here");
+
+        return deserialized;
+        ////[JSON].props.pageProps.dehydratedState.queries.[0].state.data
+        //0001000
 
     }
 }

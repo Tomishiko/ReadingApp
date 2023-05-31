@@ -9,7 +9,7 @@
 
     <!--<ShellContent
         Title="Details"
-        ContentTemplate="{DataTemplate view:DetailsPage}"
+        ContentTemplate="{DataTemplate view:Go}"
         Route="DetailPage" 
         />-->
 

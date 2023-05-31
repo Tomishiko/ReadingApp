@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:datatypes="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
+             xmlns:views="clr-namespace:WuxiaApp.Views"
+             xmlns:viewmodels="clr-namespace:WuxiaApp.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:conv="clr-namespace:WuxiaApp.Servs.Converters"
+             x:Class="WuxiaApp.Views.ReadingView"
+             x:DataType="viewmodels:ReadingViewModel"
+             Shell.NavBarIsVisible="False"
+             Title="{Binding CurrentBook.Title}"
+             x:Name="Page"
+             >
+
+    <ContentPage.Resources>
+        <conv:BookPathToBoolConvert x:Key="BookPathToBool" />
+        <Style TargetType="Frame">
+            <Setter Property="BackgroundColor"
+                    Value="Transparent" />
+            <Setter Property="BorderColor"
+                    Value="Transparent" />
+        </Style>
+        <Style TargetType="ListView">
+            <Style.Triggers>
+                <Trigger TargetType="ListView"
+                         Property="ScaleY"
+                         Value="0">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </Trigger>
+                <Trigger TargetType="ListView"
+                         Property="ScaleY"
+                         Value="1">
+                    <Setter Property="IsVisible"
+                            Value="True" />
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="Grid">
+            <Style.Triggers>
+                <Trigger TargetType="Grid"
+                         Property="Opacity"
+                         Value="0">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </Trigger>
+                <Trigger TargetType="Grid"
+                         Property="Opacity"
+                         Value="1">
+                    <Setter Property="IsVisible"
+                            Value="True" />
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+        <Style TargetType="TableView">
+            <Style.Triggers>
+
+                <Trigger TargetType="TableView"
+                         Property="Opacity"
+                         Value="0">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </Trigger>
+
+                <Trigger TargetType="TableView"
+                         Property="Opacity"
+                         Value="1">
+                    <Setter Property="IsVisible"
+                            Value="True" />
+                </Trigger>
+                <Trigger TargetType="TableView"
+                         Property="ScaleY"
+                         Value="0">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </Trigger>
+
+                <Trigger TargetType="TableView"
+                         Property="ScaleY"
+                         Value="1">
+                    <Setter Property="IsVisible"
+                            Value="True" />
+                </Trigger>
+                <Trigger TargetType="TableView"
+                         Property="Scale"
+                         Value="1">
+                    <Setter Property="IsVisible"
+                            Value="True" />
+                </Trigger>
+                <Trigger TargetType="TableView"
+                         Property="Scale"
+                         Value="0">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </Trigger>
+
+
+            </Style.Triggers>
+        </Style>
+    </ContentPage.Resources>
+
+
+    <Grid x:Name="MainGrid">
+
+
+
+        <Grid ColumnDefinitions="50,*,55"
+              ZIndex="2"
+              BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light= {StaticResource Gray25}}"
+              x:Name="DockTop"
+              HeightRequest="60"
+              VerticalOptions="Start">
+            <ImageButton Grid.Column="0"
+                         Source="icon_go_back_light.png"
+                         Scale="0.9"
+                         Clicked="BackButton_Clicked" />
+
+
+            <Label Text="{Binding CurrentBook.Title}"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   VerticalTextAlignment="Center"
+                   LineBreakMode="TailTruncation"
+                   Grid.Column="1"
+                   Padding="10,0,0,0" />
+            <ImageButton Source="icons_3dot_menu.png"
+                         Clicked="OptionsButton_clicked"
+                         Scale="0.8"
+                         Grid.Column="2"
+                         Padding="0,0,5,0">
+                <ImageButton.Behaviors>
+                    <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Dark={StaticResource White},Light={StaticResource Black}}" />
+                </ImageButton.Behaviors>
+            </ImageButton>
+        </Grid>
+        <ActivityIndicator IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           HeightRequest="75" />
+
+
+        <TableView x:Name="options"
+                   ZIndex="1"
+                   Intent="Menu"
+                   BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light= {StaticResource Gray25}}"
+                   HeightRequest="82"
+                   RowHeight="40"
+                   WidthRequest="150"
+                   VerticalOptions="Start"
+                   HorizontalOptions="End"
+                   Margin="0,60,0,0"
+                   AnchorY="0">
+
+            <TableRoot>
+                <TableSection>
+                    <TextCell Text="Go to chapter"
+                              TextColor="{AppThemeBinding Dark={StaticResource White}, Light= {StaticResource Black}}"
+                              Tapped="GoToChap_Tapped" />
+                    <ViewCell>
+                        <HorizontalStackLayout>
+                            <Image Source="{AppThemeBinding Dark='icon_info_dark.png',Light='icon_info.png'}"
+                                   HeightRequest="40"
+                                   Scale="0.6">
+                            </Image>
+
+                            <Label Text="Book info"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+
+                    </ViewCell>
+
+
+                </TableSection>
+            </TableRoot>
+        </TableView>
+        <Frame WidthRequest="100"
+               HeightRequest="100"
+               CornerRadius="90"
+               IsVisible="False"
+               IsEnabled="False"
+               Opacity="0.7"
+               x:Name="fontSizeIndicator"
+               ZIndex="3"
+               BackgroundColor="{AppThemeBinding Dark={StaticResource Tertiary}, Light={StaticResource Black}}"
+               VerticalOptions="End"
+               Margin="0,0,0,250"
+               HorizontalOptions="Center">
+            <Label Text="{Binding Source={Reference slider},Path=Value,StringFormat='{0:f1}'}"
+                   FontSize="25"
+                   TextColor="White"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center" />
+        </Frame>
+        <TableView HorizontalOptions="Start"
+                   VerticalOptions="End"
+                   HeightRequest="160"
+                   HasUnevenRows="True"
+                   ZIndex="2"
+                   Intent="Settings"
+                   Margin="20,0,20,100"
+                   BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light={StaticResource Gray25}}"
+                   x:Name="fontopts"
+                   AnchorY="1.4"
+                   AnchorX="0.35">
+            <TableRoot>
+                <TableSection Title="Font settings"
+                              TextColor="{StaticResource PrimaryLighted}">
+                    <ViewCell Height="150">
+                        <Grid ColumnDefinitions="70,*"
+                              RowDefinitions="20,40"
+                              Margin="15">
+                            <Label x:Name="label"
+                                   FontSize="14"
+                                   Grid.Column="0"
+                                   Grid.Row="0"
+                                   Text="Size" />
+                            <Slider Minimum="14"
+                                    Maximum="30"
+                                    x:Name="slider"
+                                    MinimumTrackColor="{StaticResource Primary}"
+                                    DragStarted="slider_DragStarted"
+                                    DragCompleted="slider_DragCompleted"
+                                    Grid.Column="1"
+                                    Grid.Row="0"
+                                    VerticalOptions="Start" />
+                            <VerticalStackLayout BackgroundColor="Transparent"
+                                                 Grid.Row="1"
+                                                 Grid.Column="2"
+                                                 HeightRequest="40"
+                                                 Padding="10,0,0,0">
+
+                                <Label x:DataType="views:ReadingView"
+                                       VerticalTextAlignment="Center"
+                                       BindingContext="{x:Reference Page}"
+                                       Text="{Binding CurrentFont}"
+                                       FontFamily="{Binding CurrentFont}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="FontSelection_Tapped" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <BoxView Color="{StaticResource Primary}"
+                                         Margin="0,0,0,0"
+                                         HorizontalOptions="Fill"
+                                         HeightRequest="1"/>
+                            </VerticalStackLayout>
+                        </Grid>
+
+                    </ViewCell>
+                </TableSection>
+            </TableRoot>
+
+        </TableView>
+
+        <ListView x:Name="fontpicker"
+                  BackgroundColor="{AppThemeBinding Dark={StaticResource Black}, Light={StaticResource Gray25}}"
+                  HeightRequest="190"
+                  WidthRequest="200"
+                  ZIndex="3"
+                  SelectionMode="None"
+                  RowHeight="40"
+                  VerticalOptions="End"
+                  Margin="20,0,0,90"
+                  AnchorY="0.6"
+                  ItemTapped="Fontpicker_ItemTapped">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Label Text="{Binding .}"
+                               FontFamily="{Binding .}"
+                               HorizontalTextAlignment="Center"
+                               VerticalTextAlignment="Center" />
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ScrollView ZIndex="0"
+                    IsVisible="{Binding IsNotBusy}"
+                    x:Name="Scroll">
+            <VerticalStackLayout Margin="0,60,0,0">
+                <VerticalStackLayout.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
+                </VerticalStackLayout.GestureRecognizers>
+
+
+                <Label Text="{Binding ChapName}"
+                       TextType="Html"
+                       FontAttributes="Bold"
+                       Grid.Row="0"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       TextTransform="Uppercase"
+                       FontSize="20"
+                       Padding="0,0,0,20" />
+
+                <Label Text="{Binding Text}"
+                       TextType="Text"
+                       Grid.Row="1"
+                       Padding="10"
+                       LineBreakMode="WordWrap"
+                       FontSize="{Binding Source={x:Reference slider}, Path=Value}"
+                       LineHeight="1.3"
+                       FontFamily="{Binding Source={x:Reference Page},Path=CurrentFont}"
+                       x:Name="MainText"
+                       TextColor="{AppThemeBinding Dark={StaticResource Gray100}, Light={StaticResource Black}}" />
+
+                <HorizontalStackLayout HorizontalOptions="CenterAndExpand"
+                                       Spacing="100"
+                                       IsVisible="{Binding IsNotBusy}"
+                                       Margin="0,10,0,10"
+                                       x:Name="BottomBtns">
+                    <Frame BorderColor="{StaticResource PrimaryLighted}"
+                           CornerRadius="15"
+                           HeightRequest="40"
+                           WidthRequest="90"
+                           IsEnabled="{Binding PrevChapterPath, Converter={StaticResource BookPathToBool}}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoadTextCommand}"
+                                                  CommandParameter="{Binding PrevChapterPath}"
+                                                  Tapped="LabelTextChanged" />
+                        </Frame.GestureRecognizers>
+
+                        <Image Source="icon_left.png"
+                               Aspect="AspectFit"
+                               HeightRequest="40" />
+                    </Frame>
+                    <Frame BorderColor="{StaticResource PrimaryLighted}"
+                           CornerRadius="15"
+                           HeightRequest="40"
+                           WidthRequest="90"
+                           IsEnabled="{Binding NextChapterPath, Converter={StaticResource BookPathToBool}}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding LoadTextCommand}"
+                                                  CommandParameter="{Binding NextChapterPath}"
+                                                  Tapped="LabelTextChanged" />
+                        </Frame.GestureRecognizers>
+                        <Image Source="icon_right.png"
+                               IsEnabled="{Binding NextChapterPath, Converter={StaticResource BookPathToBool}}"
+                               HeightRequest="40"
+                               Aspect="AspectFit" />
+                    </Frame>
+
+                </HorizontalStackLayout>
+
+
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <!--RowDefinitions="60"-->
+        <Grid HeightRequest="60"
+              ColumnDefinitions="*,*,*,*"
+              VerticalOptions="End"
+              x:Name="DockBot"
+              Margin="0,0,0,0"
+              ZIndex="2"
+              BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light= {StaticResource Gray25}}">
+            <Frame HorizontalOptions="Fill"
+                   Grid.Column="0"
+                   IsEnabled="{Binding PrevChapterPath, Converter={StaticResource BookPathToBool}}"
+                   IsVisible="{Binding IsNotBusy}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LoadTextCommand}"
+                                          CommandParameter="{Binding PrevChapterPath}"
+                                          Tapped="LabelTextChanged" />
+                </Frame.GestureRecognizers>
+                <Image Source="icon_left.png"
+                       HeightRequest="50" />
+            </Frame>
+
+
+            <ImageButton Source="icon_font_material.png"
+                         Grid.Column="1"
+                         HorizontalOptions="Fill"
+                         VerticalOptions="Fill"
+                         HeightRequest="40"
+                         ZIndex="1"
+                         x:Name="fontBtn"
+                         IsVisible="{Binding IsNotBusy}"
+                         Clicked="FontButton_clicked">
+                <ImageButton.Behaviors>
+                    <toolkit:IconTintColorBehavior TintColor="{StaticResource PrimaryLighted}" />
+                </ImageButton.Behaviors>
+
+            </ImageButton>
+
+            <BoxView Color="Black"
+                     WidthRequest="50"
+                     HeightRequest="50"
+                     CornerRadius="50"
+                     Grid.Column="2"
+                     IsVisible="{Binding IsNotBusy}">
+                <BoxView.GestureRecognizers>
+                    <TapGestureRecognizer />
+                </BoxView.GestureRecognizers>
+            </BoxView>
+
+            <Frame HorizontalOptions="End"
+                   Grid.Column="3"
+                   IsEnabled="{Binding NextChapterPath, Converter={StaticResource BookPathToBool}}"
+                   IsVisible="{Binding IsNotBusy}">
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LoadTextCommand}"
+                                          CommandParameter="{Binding NextChapterPath}"
+                                          Tapped="LabelTextChanged" />
+                </Frame.GestureRecognizers>
+                <Image Source="icon_right.png"
+                       HeightRequest="50" />
+            </Frame>
+
+
+
+        </Grid>
+    </Grid>
+
+</ContentPage>
+    
+    

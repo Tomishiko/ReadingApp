@@ -4,6 +4,7 @@ using System.Diagnostics;
 using WuxiaApp.Servs;
 using General.DataModels;
 using Scraper;
+using WuxiaApp.Views;
 
 namespace WuxiaApp.ViewModels;
 
@@ -89,6 +90,20 @@ public partial class LibraryViewModel : BaseViewModel
 
         }
         finally { IsBusy = false; }
+    }
+    [RelayCommand]
+    async Task ButtonClickedAsync(Book book)
+    {
+        if (book == null)
+            return;
+
+        var query = new Dictionary<string, object>
+        {
+            { "SelectedBook", book }
+        };
+        await Shell.Current.GoToAsync(nameof(ReadingView), query);
+
+
     }
 
 }

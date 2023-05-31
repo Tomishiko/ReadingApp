@@ -83,11 +83,18 @@ namespace TestProject2
                     book.PicturePath = services.FormPicturePath(result.slug);
                 services.AddNewBook(book);
             }
-            await services.Save(filesysMock.Object);
-            var expected = await services.GetBooksLocalAsync(filesysMock.Object);
+            var font = "abadakedabra";
+            var fonsize = 15d;
+            var color = Color.FromRgb(255, 255, 255);
+            services.SetUserPreferences(font,fonsize,color);
+            services.Save(filesysMock.Object);
+            var expectedLibrary = await services.GetBooksLocalAsync(filesysMock.Object);
             services = new Services();
-            var actual = await services.GetBooksLocalAsync(filesysMock.Object);
-            Assert.Equal<Book>(expected, actual);
+            var actualLibrary = await services.GetBooksLocalAsync(filesysMock.Object);
+            Assert.Equal<Book>(expectedLibrary, actualLibrary);
+            Assert.Equal(services.UserFont, font);
+            Assert.Equal(services.UserFontSize, fonsize);
+            Assert.Equal(services.UserColor,color);
         }
     }
     public class ScraperTests

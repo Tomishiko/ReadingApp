@@ -1,5 +1,4 @@
 using CommunityToolkit.Maui.Views;
-using Microsoft.Maui.Graphics;
 using WuxiaApp.Servs;
 using WuxiaApp.ViewModels;
 
@@ -11,14 +10,14 @@ public partial class ReadingView : ContentPage
     {
         Reading,
         Dock,
-        Menu1,
-        Menu2,
-        Menu3,
+        options,
+        fontopts,
+        fontpicker,
+        backgroundColor,
         Init
     }
-    Stack<visualLvls> _uiActivity;
+    Stack<visualLvls> _uiStack;
     string _currentFont;
-
     public string CurrentFont
     {
         get => _currentFont;
@@ -28,57 +27,62 @@ public partial class ReadingView : ContentPage
             OnPropertyChanged();
         }
     }
-    List<string> fonts;
+    public Color CurrentBackground
+    {
+        get => _currentBackground;
+        set
+        {
+            _currentBackground = value;
+            OnPropertyChanged();
+        }
+    }
+
+    Color _currentBackground;
+
     Services services;
-    public ReadingView(ReadingViewModel viewModel,Services services)
+    public ReadingView(ReadingViewModel viewModel, Services services)
     {
         Shell.SetTabBarIsVisible(this, false);
         InitializeComponent();
-        UI_Level_Switcher(visualLvls.Init, 0);
-        _uiActivity = new Stack<visualLvls>();
-        fonts = new List<string>
-        {
-            "OpenSansRegular",
-            "SegoeRegular",
-            "SegoePrint",
-            "Arial",
-            "Calibri",
-            "Roboto",
-            "Tahoma",
-            "TimesNewRoman"
-        };
-        fontpicker.ItemsSource = fonts;
+        UI_Groups(visualLvls.Init, 0);
+        _uiStack = new Stack<visualLvls>();
+        colorCollection.ItemsSource = services.Backgrounds;
+        fontpicker.ItemsSource = services.Fonts;
         this.services = services;
         if (services.UserProfileSet)
         {
-            CurrentFont = services.UserFont;
-            slider.Value = services.UserFontSize;
+            CurrentFont = services.Font;
+            slider.Value = services.FontSize;
+            colorCollection.SelectedItem = services.BackColor;
         }
         else
         {
-            CurrentFont = fonts[0];
+            CurrentFont = services.Fonts[0];
+            CurrentBackground = services.Backgrounds[0];
             slider.Value = 14;
         }
-        
+        colorCollection.SelectedItem = CurrentBackground;
+        colorCollection.ScaleTo(0);
         Disappearing += ReadingView_Disappearing;
+        
         BindingContext = viewModel;
 
     }
 
     private void ReadingView_Disappearing(object sender, EventArgs e)
     {
-        services.SetUserPreferences(CurrentFont, slider.Value,Color.FromRgb(0,0,0));
+        services.SetUserPreferences(CurrentFont, slider.Value, CurrentBackground);
     }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
 
-        if (_uiActivity.TryPop(out visualLvls toClose))
-            UI_Level_Switcher(toClose, 0);
+        if (_uiStack.TryPop(out visualLvls toClose))
+            UI_Groups(toClose, 0);
         else
         {
-            _uiActivity.Push(visualLvls.Dock);
-            UI_Level_Switcher(visualLvls.Dock, 1);
+            _uiStack.Push(visualLvls.Dock);
+            UI_Groups(visualLvls.Dock, 1);
         }
 
     }
@@ -109,26 +113,7 @@ public partial class ReadingView : ContentPage
 
     private async void OptionsButton_clicked(object sender, EventArgs e)
     {
-        var toClose = _uiActivity.Peek();
-        if (toClose == visualLvls.Dock)
-        {
-            _uiActivity.Push(visualLvls.Menu1);
-            await UI_Level_Switcher(visualLvls.Menu1, 1);
-            return;
-        }
-
-        do
-        {
-            var temp = _uiActivity.Pop();
-            UI_Level_Switcher(temp, 0);
-        }
-        while (_uiActivity.Peek() != visualLvls.Dock);
-        if (toClose != visualLvls.Menu1)
-        {
-            UI_Level_Switcher(visualLvls.Menu1, 1);
-            _uiActivity.Push(visualLvls.Menu1);
-        }
-
+        UI_Groups_Swithcer(visualLvls.options);
     }
 
     private async void GoToChap_Tapped(object sender, EventArgs e)
@@ -160,55 +145,36 @@ public partial class ReadingView : ContentPage
 
     private async void FontButton_clicked(object sender, EventArgs e)
     {
-
-        var toClose = _uiActivity.Peek();
-        if (toClose == visualLvls.Dock)
-        {
-            _uiActivity.Push(visualLvls.Menu2);
-            await UI_Level_Switcher(visualLvls.Menu2, 1);
-            return;
-        }
-        if (toClose != visualLvls.Menu2)
-            UI_Level_Switcher(visualLvls.Menu2, 1);
-        do
-        {
-            toClose = _uiActivity.Pop();
-            UI_Level_Switcher(toClose, 0);
-        }
-        while (_uiActivity.Peek() != visualLvls.Dock);
-
-        //font options button
+        UI_Groups_Swithcer(visualLvls.fontopts);
     }
-    async Task UI_Level_Switcher(visualLvls lvl, int opacity)
+    private void UI_Groups(visualLvls lvl, int opacity)
     {
         switch (lvl)
         {
-            //case visualLvls.Reading:
-            //    {
-            //        DockBot.FadeTo(opacity);
-            //        await DockTop.FadeTo(opacity);
-            //        _currentLvl = lvl;
-            //        break;
-            //    }
             case visualLvls.Dock:
                 {
                     DockBot.FadeTo(opacity);
                     DockTop.FadeTo(opacity);
                     break;
                 }
-            case visualLvls.Menu1:
+            case visualLvls.options:
                 {
                     options.ScaleYTo(opacity);
                     break;
                 }
-            case visualLvls.Menu2:
+            case visualLvls.fontopts:
                 {
                     fontopts.ScaleTo(opacity);
                     break;
                 }
-            case visualLvls.Menu3:
+            case visualLvls.fontpicker:
                 {
                     fontpicker.ScaleYTo(opacity);
+                    break;
+                }
+            case visualLvls.backgroundColor:
+                {
+                    colorCollection.ScaleTo(opacity);
                     break;
                 }
             default:
@@ -218,24 +184,61 @@ public partial class ReadingView : ContentPage
                     options.ScaleYTo(0);
                     fontopts.ScaleTo(0);
                     fontpicker.ScaleYTo(0);
-                    //await fontopts.FadeTo(0);
                     break;
                 }
 
         }
     }
 
+    private void UI_Groups_Swithcer(visualLvls lvl)
+    {
+        var initialState = _uiStack.Peek();
+        if (initialState == visualLvls.Dock)
+        {
+            _uiStack.Push(lvl);
+            UI_Groups(lvl, 1);
+            return;
+        }
+
+        do
+        {
+            var toClose = _uiStack.Pop();
+            UI_Groups(toClose, 0);
+
+        } while (_uiStack.Peek() != visualLvls.Dock);
+
+        if (initialState != lvl)
+        {
+            UI_Groups(lvl, 1);
+            _uiStack.Push(lvl);
+        }
+
+    }
+
     private async void FontSelection_Tapped(object sender, TappedEventArgs e)
     {
-        _uiActivity.Push(visualLvls.Menu3);
-        await UI_Level_Switcher(visualLvls.Menu3, 1);
+        _uiStack.Push(visualLvls.fontpicker);
+        UI_Groups(visualLvls.fontpicker, 1);
 
     }
 
     private async void Fontpicker_ItemTapped(object sender, ItemTappedEventArgs e)
     {
-        var toClose = _uiActivity.Pop();
+        var toClose = _uiStack.Pop();
         CurrentFont = e.Item as string;
-        await UI_Level_Switcher(toClose, 0);
+        UI_Groups(toClose, 0);
+    }
+
+
+    private void ColorOptionsTapped(object sender, TappedEventArgs e)
+    {
+        UI_Groups_Swithcer(visualLvls.backgroundColor);
+    }
+
+    private void colorCollection_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var color = e.CurrentSelection[0] as Color;
+        Scroll.BackgroundColor = color;
+        CurrentBackground = color;
     }
 }

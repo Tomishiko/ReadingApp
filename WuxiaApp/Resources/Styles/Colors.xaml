@@ -44,5 +44,11 @@
     <Color x:Key="Blue100Accent">#3E8EED</Color>
     <Color x:Key="Blue200Accent">#72ACF1</Color>
     <Color x:Key="Blue300Accent">#A7CBF6</Color>
+    <LinearGradientBrush  x:Key="BorderGradient">
+        <GradientStop Color="{StaticResource Primary}"
+                       Offset="0.2"/>
+        <GradientStop Color="#fc58a8"
+                       Offset="1"/>
+    </LinearGradientBrush>
 
 </ResourceDictionary>

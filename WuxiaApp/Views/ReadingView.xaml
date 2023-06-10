@@ -10,11 +10,46 @@
              x:DataType="viewmodels:ReadingViewModel"
              Shell.NavBarIsVisible="False"
              Title="{Binding CurrentBook.Title}"
-             x:Name="Page"
-             >
+             x:Name="Page">
 
     <ContentPage.Resources>
         <conv:BookPathToBoolConvert x:Key="BookPathToBool" />
+        <conv:ContrastColorConverter x:Key="ContrastColor" />
+
+        <Style TargetType="Border"
+               x:Key="ColorPickerBorder">
+            <Setter Property="HeightRequest"
+                    Value="60" />
+
+            <Setter Property="WidthRequest"
+                    Value="60" />
+            <Setter Property="Margin"
+                    Value="10" />
+            <Setter Property="StrokeShape"
+                    Value="Ellipse" />
+            <Setter Property="StrokeThickness"
+                    Value="3" />
+            <Setter Property="VisualStateManager.VisualStateGroups">
+                <VisualStateGroupList>
+                    <VisualStateGroup x:Name="CommonStates">
+                        <VisualState x:Name="Normal">
+                            <VisualState.Setters>
+                                <Setter Property="Stroke"
+                                        Value="{StaticResource Transp}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                        <VisualState x:Name="Selected">
+                            <VisualState.Setters>
+                                <Setter Property="BackgroundColor"
+                                        Value="Transparent" />
+                                <Setter Property="Stroke"
+                                        Value="{StaticResource PrimaryLighted}" />
+                            </VisualState.Setters>
+                        </VisualState>
+                    </VisualStateGroup>
+                </VisualStateGroupList>
+            </Setter>
+        </Style>
         <Style TargetType="Frame">
             <Setter Property="BackgroundColor"
                     Value="Transparent" />
@@ -100,6 +135,25 @@
 
             </Style.Triggers>
         </Style>
+        <Style TargetType="CollectionView"
+               x:Key="colorPrickerStyle">
+
+            <Style.Triggers>
+                <Trigger TargetType="CollectionView"
+                         Property="Scale"
+                         Value="0">
+                    <Setter Property="IsVisible"
+                            Value="False" />
+                </Trigger>
+                <Trigger TargetType="CollectionView"
+                         Property="Scale"
+                         Value="1">
+                    <Setter Property="IsVisible"
+                            Value="True" />
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
     </ContentPage.Resources>
 
 
@@ -107,10 +161,10 @@
 
 
 
-        <Grid ColumnDefinitions="50,*,55"
+        <Grid x:Name="DockTop"
+              ColumnDefinitions="50,*,55"
               ZIndex="2"
               BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light= {StaticResource Gray25}}"
-              x:Name="DockTop"
               HeightRequest="60"
               VerticalOptions="Start">
             <ImageButton Grid.Column="0"
@@ -177,13 +231,48 @@
                 </TableSection>
             </TableRoot>
         </TableView>
-        <Frame WidthRequest="100"
+
+
+        <CollectionView x:Name="colorCollection"
+                        HorizontalOptions="Center"
+                        VerticalOptions="End"
+                        HeightRequest="100"
+                        WidthRequest="320"
+                        ZIndex="3"
+                        Margin="0,0,0,100"
+                        BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light={StaticResource Gray25}}"
+                        AnchorY="1.4"
+                        AnchorX="0.65"
+                        ItemsLayout="HorizontalList"
+                        SelectionMode="Single"
+                        Style="{StaticResource colorPrickerStyle}"
+                        SelectionChanged="colorCollection_SelectionChanged">
+            <!--<Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="ColorChangerTapped" />
+            </Border.GestureRecognizers>-->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Border BackgroundColor="{Binding .}"
+                            Style="{StaticResource ColorPickerBorder}"
+                            ZIndex="0">
+                    </Border>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+
+
+        </CollectionView>
+
+
+
+        <Frame x:Name="fontSizeIndicator"
+               WidthRequest="100"
                HeightRequest="100"
                CornerRadius="90"
                IsVisible="False"
                IsEnabled="False"
                Opacity="0.7"
-               x:Name="fontSizeIndicator"
                ZIndex="3"
                BackgroundColor="{AppThemeBinding Dark={StaticResource Tertiary}, Light={StaticResource Black}}"
                VerticalOptions="End"
@@ -195,7 +284,9 @@
                    VerticalOptions="Center"
                    HorizontalOptions="Center" />
         </Frame>
-        <TableView HorizontalOptions="Start"
+
+        <TableView x:Name="fontopts"
+                   HorizontalOptions="Start"
                    VerticalOptions="End"
                    HeightRequest="160"
                    HasUnevenRows="True"
@@ -203,21 +294,26 @@
                    Intent="Settings"
                    Margin="20,0,20,100"
                    BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light={StaticResource Gray25}}"
-                   x:Name="fontopts"
                    AnchorY="1.4"
                    AnchorX="0.35">
             <TableRoot>
                 <TableSection Title="Font settings"
                               TextColor="{StaticResource PrimaryLighted}">
                     <ViewCell Height="150">
-                        <Grid ColumnDefinitions="70,*"
-                              RowDefinitions="20,40"
+                        <Grid ColumnDefinitions="50,*"
+                              RowDefinitions="40,45
+                              "
                               Margin="15">
                             <Label x:Name="label"
                                    FontSize="14"
                                    Grid.Column="0"
                                    Grid.Row="0"
                                    Text="Size" />
+                            <Label FontSize="14"
+                                   Grid.Column="0"
+                                   Grid.Row="1"
+                                   Text="Font"
+                                   VerticalTextAlignment="Center" />
                             <Slider Minimum="14"
                                     Maximum="30"
                                     x:Name="slider"
@@ -225,27 +321,28 @@
                                     DragStarted="slider_DragStarted"
                                     DragCompleted="slider_DragCompleted"
                                     Grid.Column="1"
-                                    Grid.Row="0"
-                                    VerticalOptions="Start" />
+                                    Grid.Row="0" />
                             <VerticalStackLayout BackgroundColor="Transparent"
                                                  Grid.Row="1"
                                                  Grid.Column="2"
                                                  HeightRequest="40"
                                                  Padding="10,0,0,0">
+                                <VerticalStackLayout.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="FontSelection_Tapped" />
+                                </VerticalStackLayout.GestureRecognizers>
 
                                 <Label x:DataType="views:ReadingView"
                                        VerticalTextAlignment="Center"
                                        BindingContext="{x:Reference Page}"
                                        Text="{Binding CurrentFont}"
-                                       FontFamily="{Binding CurrentFont}">
-                                    <Label.GestureRecognizers>
-                                        <TapGestureRecognizer Tapped="FontSelection_Tapped" />
-                                    </Label.GestureRecognizers>
+                                       FontFamily="{Binding CurrentFont}"
+                                       Padding="0,6,0,0">
+
                                 </Label>
                                 <BoxView Color="{StaticResource Primary}"
                                          Margin="0,0,0,0"
                                          HorizontalOptions="Fill"
-                                         HeightRequest="1"/>
+                                         HeightRequest="1" />
                             </VerticalStackLayout>
                         </Grid>
 
@@ -255,8 +352,9 @@
 
         </TableView>
 
+
         <ListView x:Name="fontpicker"
-                  BackgroundColor="{AppThemeBinding Dark={StaticResource Black}, Light={StaticResource Gray25}}"
+                  BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light={StaticResource Gray25}}"
                   HeightRequest="190"
                   WidthRequest="200"
                   ZIndex="3"
@@ -265,6 +363,7 @@
                   VerticalOptions="End"
                   Margin="20,0,0,90"
                   AnchorY="0.6"
+                  VerticalScrollBarVisibility="Never"
                   ItemTapped="Fontpicker_ItemTapped">
             <ListView.ItemTemplate>
                 <DataTemplate>
@@ -277,16 +376,21 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <ScrollView ZIndex="0"
+        <ScrollView x:Name="Scroll"
+                    ZIndex="0"
                     IsVisible="{Binding IsNotBusy}"
-                    x:Name="Scroll">
-            <VerticalStackLayout Margin="0,60,0,0">
+                    BackgroundColor="{Binding Source={x:Reference Page}, Path=CurrentBackground}">
+            <VerticalStackLayout Margin="0,60,0,0"
+                                 BackgroundColor="Transparent">
                 <VerticalStackLayout.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" />
                 </VerticalStackLayout.GestureRecognizers>
 
+                <!--TextColor="{Binding Source={x:Reference Page}, Path=CurrentBackground,Converter={StaticResource ContrastColor}}"-->
 
-                <Label Text="{Binding ChapName}"
+                <Label x:Name="UpperChapName"
+                       Text="{Binding ChapName}"
+                       TextColor="{Binding Source={x:Reference Page}, Path=CurrentBackground,Converter={StaticResource ContrastColor}}"
                        TextType="Html"
                        FontAttributes="Bold"
                        Grid.Row="0"
@@ -298,14 +402,14 @@
 
                 <Label Text="{Binding Text}"
                        TextType="Text"
+                       TextColor="{Binding Source={x:Reference Page}, Path=CurrentBackground,Converter={StaticResource ContrastColor}}"
                        Grid.Row="1"
                        Padding="10"
                        LineBreakMode="WordWrap"
                        FontSize="{Binding Source={x:Reference slider}, Path=Value}"
                        LineHeight="1.3"
                        FontFamily="{Binding Source={x:Reference Page},Path=CurrentFont}"
-                       x:Name="MainText"
-                       TextColor="{AppThemeBinding Dark={StaticResource Gray100}, Light={StaticResource Black}}" />
+                       x:Name="MainText" />
 
                 <HorizontalStackLayout HorizontalOptions="CenterAndExpand"
                                        Spacing="100"
@@ -350,10 +454,10 @@
             </VerticalStackLayout>
         </ScrollView>
         <!--RowDefinitions="60"-->
-        <Grid HeightRequest="60"
+        <Grid x:Name="DockBot"
+              HeightRequest="60"
               ColumnDefinitions="*,*,*,*"
               VerticalOptions="End"
-              x:Name="DockBot"
               Margin="0,0,0,0"
               ZIndex="2"
               BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light= {StaticResource Gray25}}">
@@ -393,7 +497,7 @@
                      Grid.Column="2"
                      IsVisible="{Binding IsNotBusy}">
                 <BoxView.GestureRecognizers>
-                    <TapGestureRecognizer />
+                    <TapGestureRecognizer Tapped="ColorOptionsTapped" />
                 </BoxView.GestureRecognizers>
             </BoxView>
 

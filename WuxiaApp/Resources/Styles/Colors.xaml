@@ -35,14 +35,20 @@
     <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
 
     <Color x:Key="Transp">#00000000</Color>
-    <Color x:Key="Yellow100Accent">#F7B548</Color>
-    <Color x:Key="Yellow200Accent">#FFD590</Color>
-    <Color x:Key="Yellow300Accent">#FFE5B9</Color>
+    <Color x:Key="Yellow100Accent">#C8C8C8</Color>
+    <Color x:Key="Yellow200Accent">#C8C8C8</Color>
+    <Color x:Key="Yellow300Accent">#C8C8C8</Color>
     <Color x:Key="Cyan100Accent">#28C2D1</Color>
     <Color x:Key="Cyan200Accent">#7BDDEF</Color>
     <Color x:Key="Cyan300Accent">#C3F2F4</Color>
     <Color x:Key="Blue100Accent">#3E8EED</Color>
     <Color x:Key="Blue200Accent">#72ACF1</Color>
     <Color x:Key="Blue300Accent">#A7CBF6</Color>
+    <LinearGradientBrush  x:Key="BorderGradient">
+        <GradientStop Color="{StaticResource Primary}"
+                       Offset="0.2"/>
+        <GradientStop Color="#fc58a8"
+                       Offset="1"/>
+    </LinearGradientBrush>
 
 </ResourceDictionary>

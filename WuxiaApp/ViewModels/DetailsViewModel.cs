@@ -16,9 +16,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     [ObservableProperty]
     Book book;
     [ObservableProperty]
-    string addButtonText;
-    [ObservableProperty]
-    bool addButtonBehavior = true;
+    bool? isInLibrary = false;
     public DetailsViewModel(Services services,LibraryViewModel libVm)
     {
         libraryViewModel = libVm;
@@ -32,6 +30,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
 
         if (query["slug"] is not string slug)
             return;
+        
         await GetBookDataAsync(slug);
     }
 
@@ -65,12 +64,12 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
             Book = book;
             if (services.CheckBookInLib(book))
             {
-                AddButtonText = "Already in your library";
-                AddButtonBehavior = false;
+                IsInLibrary = true;
+
             }
             else
             {
-                AddButtonText = "Add to your library";
+                //AddButtonText = "Add to your library";
                 Book.Readed = 1;
             }
         }

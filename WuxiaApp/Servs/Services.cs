@@ -273,6 +273,12 @@ public class Services
         _userBackColor = Backgrounds.IndexOf(color);
         UserProfileSet = true;
     }
+    public Book GetLocalBookData(Book book)
+    {
+        ArgumentNullException.ThrowIfNull(book, nameof(book));
+        //bookList.Find()
+        return null;
+    }
 
 }
 

@@ -38,7 +38,7 @@
                 <Frame CornerRadius="10"
                        IsVisible="{Binding IsNotBusy}">
                     <VerticalStackLayout>
-                        <Button Text="Continue reading Chapter 145"
+                        <Button x:Name="ReadingButton"
                                 FontAttributes="Bold"
                                 HorizontalOptions="Center"
                                 Style="{StaticResource BtnStyle}"
@@ -93,12 +93,13 @@
                                  StrokeThickness="1"
                                  BackgroundColor="{StaticResource Gray200}"
                                  WidthRequest="500" />
-                        <Button Text="{Binding AddButtonText}"
+                        <Button x:Name="AddButton"
+                                Text="Add to library"
                                 Style="{StaticResource BtnStyle}"
                                 Command="{Binding AddNewBookCommand}"
                                 CommandParameter="{Binding Book}"
                                 Clicked="Button_Clicked"
-                                IsEnabled="{Binding AddButtonBehavior}"/>
+                                />
 
 
                         <!--<Button Text="Add to library"

@@ -1,11 +1,10 @@
-﻿
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using General.DataModels;
 using System.ComponentModel;
 using WuxiaApp.Servs;
-
 namespace WuxiaApp.ViewModels;
+
 
 public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyPropertyChanged
 {

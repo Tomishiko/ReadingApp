@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using General.DataModels;
 using System.Diagnostics;
 using WuxiaApp.Servs;
+using WuxiaApp.Views;
 
 
 
@@ -16,9 +17,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     [ObservableProperty]
     Book book;
     [ObservableProperty]
-    string addButtonText;
-    [ObservableProperty]
-    bool addButtonBehavior = true;
+    bool? isInLibrary = false;
     public DetailsViewModel(Services services,LibraryViewModel libVm)
     {
         libraryViewModel = libVm;
@@ -32,6 +31,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
 
         if (query["slug"] is not string slug)
             return;
+        
         await GetBookDataAsync(slug);
     }
 
@@ -65,14 +65,12 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
             Book = book;
             if (services.CheckBookInLib(book))
             {
-                AddButtonText = "Already in your library";
-                AddButtonBehavior = false;
+                var local = services.GetLocalBookData(Book);
+                Book.Readed = local.Readed;
+                IsInLibrary = true;
             }
             else
-            {
-                AddButtonText = "Add to your library";
                 Book.Readed = 1;
-            }
         }
         catch (Exception ex)
         {
@@ -88,6 +86,20 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     {
         services.AddNewBook(book);
         libraryViewModel.Books.Add(book);
+    }
+    [RelayCommand]
+    async Task ButtonClickedAsync(Book book)
+    {
+        if (book == null)
+            return;
+
+        var query = new Dictionary<string, object>
+        {
+            { "SelectedBook", book }
+        };
+        await Shell.Current.GoToAsync(nameof(ReadingView), query);
+
+
     }
 
 

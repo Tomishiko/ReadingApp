@@ -58,7 +58,7 @@ public partial class LibraryViewModel : BaseViewModel
             if (Books.Count != 0)
                 Books.Clear();
             foreach (var book in books)
-                Books.Add(book);
+                Books.Add(book.Value);
 
         }
         catch (Exception ex)

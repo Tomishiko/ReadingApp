@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using General.DataModels;
 using System.Diagnostics;
 using WuxiaApp.Servs;
+using WuxiaApp.Views;
 
 
 
@@ -64,14 +65,12 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
             Book = book;
             if (services.CheckBookInLib(book))
             {
+                var local = services.GetLocalBookData(Book);
+                Book.Readed = local.Readed;
                 IsInLibrary = true;
-
             }
             else
-            {
-                //AddButtonText = "Add to your library";
                 Book.Readed = 1;
-            }
         }
         catch (Exception ex)
         {
@@ -87,6 +86,20 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
     {
         services.AddNewBook(book);
         libraryViewModel.Books.Add(book);
+    }
+    [RelayCommand]
+    async Task ButtonClickedAsync(Book book)
+    {
+        if (book == null)
+            return;
+
+        var query = new Dictionary<string, object>
+        {
+            { "SelectedBook", book }
+        };
+        await Shell.Current.GoToAsync(nameof(ReadingView), query);
+
+
     }
 
 

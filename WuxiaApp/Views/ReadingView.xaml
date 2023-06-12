@@ -222,7 +222,12 @@
                             </Image>
 
                             <Label Text="Book info"
-                                   VerticalOptions="Center" />
+                                   VerticalOptions="Center">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding NavigateToDetailsCommand}"
+                                                          CommandParameter="{Binding CurrentBook}"/>
+                                </Label.GestureRecognizers>
+                            </Label>
                         </HorizontalStackLayout>
 
                     </ViewCell>

@@ -16,7 +16,7 @@ public partial class DetailsPage : ContentPage
 		ReadingButton.Bind(
 			Button.TextProperty,
 			static (DetailsViewModel vm)=>vm.IsInLibrary,
-			convert: (bool? isInLib) => (bool)isInLib ? "Continue reading ch. " : "Start reading");
+			convert: (bool? isInLib) => (bool)isInLib ? "Continue reading ch. "+vm.Book.Readed : "Start reading");
 		AddButton.Bind(
 			Button.TextProperty,
 			static (DetailsViewModel vm) => vm.IsInLibrary,

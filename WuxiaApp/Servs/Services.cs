@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Headers;
 using Scraper;
 using System.Text;
+using System.Collections;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace WuxiaApp.Servs;
 public class Services
 {
-    List<Book> bookList;
+    Dictionary<string,Book> books;
     readonly string api;
     readonly string hostSite;
     static HttpClient client;
@@ -59,7 +61,7 @@ public class Services
         client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
         scraper = new WuxiaScraper();
-        bookList = new List<Book>();
+        books = new Dictionary<string, Book>();
         UserProfileSet = false;
         Fonts = new List<string>
         {
@@ -82,16 +84,16 @@ public class Services
 
     }
 
-    public async Task<List<Book>> GetBooksLocalAsync(IFileSystem fileSystem)
+    public async Task<Dictionary<string, Book>> GetBooksLocalAsync(IFileSystem fileSystem)
     {
 
-        if (bookList?.Count > 0)
-            return bookList;
+        if (books?.Count > 0)
+            return books;
         try
         {
-
+            
             var contents = await File.ReadAllTextAsync(Path.Combine(fileSystem.AppDataDirectory, "library.dat"));
-            bookList = JsonSerializer.Deserialize<List<Book>>(contents);
+            books = JsonSerializer.Deserialize<Dictionary<string, Book>>(contents);
             var path = Path.Combine(fileSystem.AppDataDirectory, "user_profile");
             if (File.Exists(path))
             {
@@ -108,7 +110,7 @@ public class Services
         }
         catch (Exception ex) { Debug.WriteLine(ex.Message); }
 
-        return bookList;
+        return books;
     }
 
     public async Task<searchResult> SearchBookAsync(string searchPattern = "", string ordering = "-total_views", string category = "", string limit = "10")
@@ -167,15 +169,14 @@ public class Services
 
     public void DeleteBook(Book book)
     {
-        if (!bookList.Contains(book))
-            throw new ArgumentException($"There is no book {book.Title} by {book.Author.name} in the library");
-        bookList?.Remove(book);
-
+        var result = books.Remove(book.Slug);
+        if (!result)
+            throw new ArgumentException("Book is not present in the lib collection", nameof(book));
     }
 
     public void Save(IFileSystem fileSystem)
     {
-        var content = JsonSerializer.Serialize(bookList);
+        var content = JsonSerializer.Serialize(books);
         try
         {
             
@@ -209,9 +210,10 @@ public class Services
     /// <exception cref="ArgumentException"></exception>
     public void AddNewBook(Book book)
     {
-        if (bookList.Contains(book))
+        if (books.ContainsKey(book.Slug))
             throw new ArgumentException($"Error book {book.Title} by {book.Author.name} is already present is the library");
-        bookList.Add(book);
+        books.Add(book.Slug,book);
+        
     }
     public async Task<BookInfo> GetBookInfoAsync(string name)
     {
@@ -238,7 +240,7 @@ public class Services
     public bool CheckBookInLib(Book book)
     {
         ArgumentNullException.ThrowIfNull(book);
-        return bookList.Contains(book);
+        return books.ContainsKey(book.Slug);
     }
     public async Task<searchResult> LoadNextDataAsync(Uri path)
     {
@@ -262,7 +264,7 @@ public class Services
 
     public void SaveReadedPoint(Book readedBook)
     {
-        var result = bookList.Find(book => book.Slug == readedBook.Slug);
+        Book result = (Book)books[readedBook.Slug];
         result.Readed = readedBook.Readed;
 
     }
@@ -276,8 +278,7 @@ public class Services
     public Book GetLocalBookData(Book book)
     {
         ArgumentNullException.ThrowIfNull(book, nameof(book));
-        //bookList.Find()
-        return null;
+        return books[book.Slug];
     }
 
 }

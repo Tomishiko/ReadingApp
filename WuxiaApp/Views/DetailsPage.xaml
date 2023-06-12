@@ -42,6 +42,8 @@
                                 FontAttributes="Bold"
                                 HorizontalOptions="Center"
                                 Style="{StaticResource BtnStyle}"
+                                Command="{Binding ButtonClickedCommand}"
+                                CommandParameter="{Binding Book}"
                                 />
                         <Border  Margin="20"
                                  StrokeThickness="1"

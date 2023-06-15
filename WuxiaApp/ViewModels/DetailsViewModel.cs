@@ -60,7 +60,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
             if (bookinfo.image == null)
                 book.PicturePath = "unloaded_image.png";
             else
-                book.PicturePath = services.FormPicturePath(bookinfo.slug,"bigpic");
+                book.PicturePath = services.FormPicturePath(bookinfo.slug,picParams.bigpic);
             
             Book = book;
             if (services.CheckBookInLib(book))
@@ -87,6 +87,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
         services.AddNewBook(book);
         libraryViewModel.Books.Add(book);
     }
+    //Button command for AddToLib Button
     [RelayCommand]
     async Task ButtonClickedAsync(Book book)
     {

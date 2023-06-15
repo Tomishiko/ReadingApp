@@ -11,6 +11,9 @@ namespace WuxiaApp.ViewModels;
 
 public partial class UICollectionElement : ObservableObject
 {
+    
+    internal Uri nextDataChunk;
+
     [NotifyPropertyChangedFor(nameof(IsNotLoading))]
     [ObservableProperty]
     bool isLoading;
@@ -22,8 +25,6 @@ public partial class UICollectionElement : ObservableObject
     string categoryName;
     [ObservableProperty]
     int opacity;
-    internal Uri nextDataChunk;
-
     public ICommand TriggerAnimationCommand { get; set; }
 
     public UICollectionElement(string category)
@@ -96,8 +97,10 @@ public partial class PopularViewModel : BaseViewModel
         //List<Book> books = new();
         if(currentElement.Books.Count !=0)
             currentElement.Books.Clear();
-        searchResult searchresult;
-        searchresult = await services.SearchBookAsync(category: searchPattern, ordering: order, limit: "4");
+        var searchresult = await services.SearchBookAsync(category: searchPattern, ordering: order, limit: "4");
+        if(searchresult is null)
+            return;
+
         currentElement.nextDataChunk = new Uri(searchresult.next);
         foreach (var result in searchresult.results)
         {
@@ -117,11 +120,7 @@ public partial class PopularViewModel : BaseViewModel
             currentElement.Books.Add(book);
         }
 
-        //currentElement.TriggerAnimationCommand.Execute(null);
         currentElement.IsLoading = false;
-
-
-        //return books;
 
     }
 

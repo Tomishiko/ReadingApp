@@ -6,6 +6,7 @@ namespace WuxiaApp.Views;
 
 public partial class ReadingView : ContentPage
 {
+    Color _currentBackground;
     enum visualLvls
     {
         Reading,
@@ -16,6 +17,8 @@ public partial class ReadingView : ContentPage
         backgroundColor,
         Init
     }
+        Services services;
+
     Stack<visualLvls> _uiStack;
     string _currentFont;
     public string CurrentFont
@@ -37,9 +40,7 @@ public partial class ReadingView : ContentPage
         }
     }
 
-    Color _currentBackground;
 
-    Services services;
     public ReadingView(ReadingViewModel viewModel, Services services)
     {
         Shell.SetTabBarIsVisible(this, false);

@@ -17,14 +17,13 @@ namespace WuxiaApp.ViewModels;
 
 public partial class SearchPageViewModel : BaseViewModel
 {
+    Services services;
+    Uri nextData;
     public ObservableCollection<Book> Books { get; } = new();
     [ObservableProperty]
     bool isLoadingNewData=false;
     [ObservableProperty]
     uint footer;
-    
-    readonly Services services;
-    Uri nextData;
     public SearchPageViewModel(Services services)
     {
         this.services = services;

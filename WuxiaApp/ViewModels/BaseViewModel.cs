@@ -9,10 +9,11 @@ namespace WuxiaApp.ViewModels;
 
 public partial class BaseViewModel : ObservableObject
 {
+    static protected bool hasInternet;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotBusy))]
     bool isBusy;
-    static protected bool hasInternet;
+    public bool IsNotBusy => !IsBusy;
     [ObservableProperty]
     string title;
     public BaseViewModel() { }
@@ -24,7 +25,6 @@ public partial class BaseViewModel : ObservableObject
         else
             hasInternet = true;
     }
-    public bool IsNotBusy => !IsBusy;
     [RelayCommand]
     async Task NavigateToDetails(Book book)
     {

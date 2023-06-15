@@ -10,6 +10,7 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
 {
     Services services;
     string currentChapterPath;
+    
     [ObservableProperty]
     string nextChapterPath;
     [ObservableProperty]
@@ -21,8 +22,6 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
     [ObservableProperty]
     Book currentBook;
 
-    //ChapterData chapterData;
-    //public event PropertyChangedEventHandler PropertyChanged;
     public ReadingViewModel(Services services)
     {
         this.services = services;

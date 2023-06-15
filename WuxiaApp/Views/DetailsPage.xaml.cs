@@ -26,7 +26,9 @@ public partial class DetailsPage : ContentPage
 			static (DetailsViewModel vm) => vm.IsInLibrary,
 			convert: (bool? isInLib) => !isInLib);
 	}
-
+/// <summary>
+/// Add button behavior when book is added to the lib
+/// </summary>
     private void Button_Clicked(object sender, EventArgs e)
     {
 		var btn = sender as Button;

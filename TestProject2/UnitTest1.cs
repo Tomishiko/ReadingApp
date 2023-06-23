@@ -11,34 +11,34 @@ namespace TestProject2
         [Fact]
         public async void SearchBookThrowsExceptionWhenHttpUnsuccessful()
         {
-            var service = new Services();
+            var service = new BaseServices();
             var result = await service.SearchBookAsync();
 
         }
         [Fact]
         public async void NewHttpRequestTest()
         {
-            var servs = new Services();
+            var servs = new BaseServices();
             var output = await servs.SearchBookAsync("martial");   
         }
 
         [Fact]
         public async void AdvanceSearchIsWorking()
         {
-            var services = new Services();
+            var services = new BaseServices();
             var respond = await services.AdvancedFilteringAsync("xuanhuan");
         }
         [Fact]
         public void FiltratingNovelsByCategoryIsWorking()
         {
-            var services = new Services();
+            var services = new BaseServices();
             services.SearchBookAsync(category: "xuanhuan");
         }
 
         [Fact]
         public async void GetBookInfoReturnsBookInfo()
         {
-            var services = new Services();
+            var services = new BaseServices();
             var resp = await services.GetBookInfoAsync("library-of-heavens-path");
             output.WriteLine((await services.GetBookInfoAsync("library-of-heavens-path")).ToString());
         }
@@ -46,13 +46,13 @@ namespace TestProject2
         [Fact]
         public void FormPicPathThrowsExceptionWhenNameNull()
         {
-            var service = new Services();
+            var service = new BaseServices();
             Assert.Throws<ArgumentNullException>(() =>service.FormPicturePath(null));
         }
         [Fact]
         public void FormPicPathThrowsExceptionWhenParamNull()
         {
-            var service = new Services();
+            var service = new BaseServices();
             Assert.Throws<ArgumentNullException>(() => 
             service.FormPicturePath("blah")
                 );
@@ -60,7 +60,7 @@ namespace TestProject2
         [Fact]
         public async void NextDataMethodReturnsProperResult()
         {
-           var service = new Services();
+           var service = new BaseServices();
            var output = await service.LoadNextDataAsync(new Uri("http://wuxia.click/api/search/?limit=10&offset=10&search=mar"));
         }
         [Fact]
@@ -68,7 +68,7 @@ namespace TestProject2
         {
             var filesysMock = new Mock<IFileSystem>();
             filesysMock.Setup(p => p.AppDataDirectory).Returns("output/");
-            var services = new Services();
+            var services = new PreferenceServices();
             var searchresult = await services.SearchBookAsync();
             foreach (var result in searchresult.results)
             {
@@ -93,7 +93,7 @@ namespace TestProject2
             services.SetUserPreferences(font,fonsize,color);
             services.Save(filesysMock.Object);
             var expectedLibrary = await services.GetBooksLocalAsync(filesysMock.Object);
-            services = new Services();
+            services = new PreferenceServices();
             var actualLibrary = await services.GetBooksLocalAsync(filesysMock.Object);
             // Assert.Equal<Book>(expectedLibrary, actualLibrary);
             // Assert.Equal(services.UserFont, font);
@@ -130,8 +130,8 @@ namespace TestProject2
     }
     public class ApiTests
     {
-        //Services service;
-        public ApiTests(){}
+        BaseServices service;
+        public ApiTests() { service = new BaseServices(); }
         [Fact]
         public async void SerchBookDefoultParamsReturnsExpectedData()
         {
@@ -143,8 +143,8 @@ namespace TestProject2
         {
             var responseMsg = new HttpResponseMessage(System.Net.HttpStatusCode.NotFound);
             var httpclientMock = new Mock<HttpClient>();
-            
-            service.SearchBookAsync()
+
+            service.SearchBookAsync();
         }
 
     }

@@ -8,7 +8,7 @@ namespace WuxiaApp.ViewModels;
 
 public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyPropertyChanged
 {
-    Services services;
+    BaseServices services;
     string currentChapterPath;
     
     [ObservableProperty]
@@ -22,7 +22,7 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
     [ObservableProperty]
     Book currentBook;
 
-    public ReadingViewModel(Services services)
+    public ReadingViewModel(BaseServices services)
     {
         this.services = services;
 

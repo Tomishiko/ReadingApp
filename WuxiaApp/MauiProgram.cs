@@ -35,7 +35,8 @@ namespace WuxiaApp
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
-            builder.Services.AddSingleton<Services>();
+            builder.Services.AddSingleton<BaseServices>();
+            builder.Services.AddSingleton<PreferenceServices>();
             builder.Services.AddSingleton<LibraryViewModel>();
             builder.Services.AddSingleton<Library>();
             builder.Services.AddSingleton<PopularViewModel>();

@@ -38,9 +38,9 @@ public partial class UICollectionElement : ObservableObject
 
 public partial class PopularViewModel : BaseViewModel
 {
-    readonly Services services;
+    readonly BaseServices services;
     public ObservableCollection<UICollectionElement> Data { get; } = new();
-    public PopularViewModel(Services services,IConnectivity connectivity)
+    public PopularViewModel(BaseServices services,IConnectivity connectivity)
     {
         this.services = services;
         if (connectivity.NetworkAccess != NetworkAccess.Internet)

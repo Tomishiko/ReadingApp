@@ -6,6 +6,7 @@ using WuxiaClassLib.DataModels;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Headers;
 using Scraper;
+using System.Xml;
 
 namespace WuxiaApp.Servs;
 public enum picParams
@@ -15,81 +16,62 @@ public enum picParams
     source
 }
 
-public class Services
+public class BaseServices
 {
-    protected  HttpClient client;
-    readonly string api;
-    readonly string hostSite;
+    static protected int _userFont;
+    static protected double _userFontSize;
+    static protected int _userBackColor;
+    static protected HttpClient client;
     /// <summary>
     /// auxiliary collection for forming image path
     /// </summary>
-    readonly Dictionary<picParams, string> ImageParams = new()
-    {
-        [picParams.preview] = ".webp?width=150&quality=60",
-        [picParams.bigpic] = ".webp",
-        [picParams.source] = "https://wuxiaworldeu.b-cdn.net/original/"
-    };
-    Dictionary<string, Book> books;
+    static readonly Dictionary<picParams, string> ImageParams;
+    static readonly string api;
+    static readonly string hostSite;
+    Dictionary<string, Book> books = new Dictionary<string, Book>();
+
     WuxiaScraper scraper;
-    int _userFont;
-    double _userFontSize;
-    int _userBackColor;
 
-    public bool UserProfileSet { get; set; }
-    public string Font { get => Fonts[_userFont]; }
-    public int FontIndex
-    {
-        get => _userFont;
-        set
-        {
-            if (value >= Fonts.Count || value < 0) return;
-            else _userFont = value;
-        }
-    }
-    public int BackColorIndex
-    {
-        get => _userBackColor;
-        set
-        {
-            if (value >= Backgrounds.Count || value < 0) return;
-            else _userBackColor = value;
-        }
-    }
-    public Color BackColor { get => Backgrounds[_userBackColor]; }
-    public double FontSize { get => _userFontSize; }
-    public List<string> Fonts;
-    public List<Color> Backgrounds;
 
-    public Services()
+    static BaseServices()
     {
-        api = "https://wuxia.click/api/";
-        hostSite = "https://wuxia.click/";
+        var doc = new XmlDocument();
+        using var stream = FileSystem.OpenAppPackageFileAsync(@"API/config.xml");
+        doc.Load(stream.GetAwaiter().GetResult());
+        var node = doc.DocumentElement.SelectSingleNode("/config/api");
+        api = node.Attributes[0].InnerText;
+        hostSite = node.Attributes[1].InnerText;
+        node = doc.DocumentElement.SelectSingleNode("/config/images");
+        ImageParams = new()
+        {
+            [picParams.preview] = ".webp?width=150&quality=60",
+            [picParams.bigpic] = ".webp",
+            [picParams.source] = node.Attributes[0].InnerText
+
+        };
+
+        //api = "https://wuxia.click/api/";
+        //hostSite = "https://wuxia.click/";
+        ////node = doc.DocumentElement.SelectSingleNode("/config/images");
+        //ImageParams = new()
+        //{
+        //    [picParams.preview] = ".webp?width=150&quality=60",
+        //    [picParams.bigpic] = ".webp",
+        //    [picParams.source] = "https://wuxiaworldeu.b-cdn.net/original/"
+        //};
+    }
+    public BaseServices()
+    {
+
         client = new HttpClient() { BaseAddress = new Uri(api) };
         client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
         scraper = new WuxiaScraper();
         books = new Dictionary<string, Book>();
-        UserProfileSet = false;
-        Fonts = new List<string>
-        {
-            "OpenSansRegular",
-            "SegoeRegular",
-            "SegoePrint",
-            "Arial",
-            "Calibri",
-            "Roboto",
-            "Tahoma",
-            "TimesNewRoman"
-        };
-        Backgrounds = new List<Color>
-        {
-            Color.FromRgb(255,255,255),
-            Color.FromRgb(0,0,0),
-            Color.FromRgb(224,219,182),
-            Color.FromRgb(190,190,190)
-        };
+        //UserProfileSet = false;
 
     }
+
 
     /// <summary>
     /// Gets library data and user preferences stored in local file
@@ -105,18 +87,18 @@ public class Services
 
         var contents = await File.ReadAllTextAsync(Path.Combine(fileSystem.AppDataDirectory, "library.dat"));
         books = JsonSerializer.Deserialize<Dictionary<string, Book>>(contents);
-        var path = Path.Combine(fileSystem.AppDataDirectory, "user_profile");
-        if (File.Exists(path))
-        {
-            using (var stream = File.Open(path, FileMode.Open))
-            {
-                var reader = new BinaryReader(stream);
-                _userFont = reader.ReadInt32();
-                _userFontSize = reader.ReadDouble();
-                _userBackColor = reader.ReadInt32();
-            }
-            UserProfileSet = true;
-        }
+        //var path = Path.Combine(fileSystem.AppDataDirectory, "user_profile");
+        //if (File.Exists(path))
+        //{
+        //    using (var stream = File.Open(path, FileMode.Open))
+        //    {
+        //        var reader = new BinaryReader(stream);
+        //        _userFont = reader.ReadInt32();
+        //        _userFontSize = reader.ReadDouble();
+        //        _userBackColor = reader.ReadInt32();
+        //    }
+        //    UserProfileSet = true;
+        //}
 
 
 
@@ -336,25 +318,6 @@ public class Services
     {
         scraper.SiteUri = new Uri(hostSite + "chapter/" + chapSlug);
         return await scraper.GetScriptContentDOMAsync<ChapterData>();
-    }
-    /// <summary>
-    /// Updates user preferences 
-    /// </summary>
-    /// <param name="font"></param>
-    /// <param name="fontsize"></param>
-    /// <param name="color"></param>
-    /// <exception cref="ArgumentNullException"></exception>
-
-    public void SetUserPreferences(string font, double fontsize, Color color)
-    {
-        ArgumentNullException.ThrowIfNullOrEmpty(font);
-        ArgumentNullException.ThrowIfNull(fontsize);
-        ArgumentNullException.ThrowIfNull(color);
-
-        _userFont = Fonts.IndexOf(font);
-        _userFontSize = fontsize;
-        _userBackColor = Backgrounds.IndexOf(color);
-        UserProfileSet = true;
     }
     /// <summary>
     /// Returns specific book's object currently stored in memory

@@ -10,10 +10,10 @@ namespace WuxiaApp.ViewModels;
 
 public partial class LibraryViewModel : BaseViewModel
 {
-    readonly Services services;
+    readonly BaseServices services;
     readonly string libPath;
     public ObservableCollection<Book> Books { get; } = new();
-    public LibraryViewModel(Services services,IConnectivity connectivity):base(connectivity)
+    public LibraryViewModel(BaseServices services,IConnectivity connectivity):base(connectivity)
     {
         libPath = Path.Combine(FileSystem.Current.AppDataDirectory, "library.dat");
         this.services = services;

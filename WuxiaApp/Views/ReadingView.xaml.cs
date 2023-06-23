@@ -7,6 +7,8 @@ namespace WuxiaApp.Views;
 public partial class ReadingView : ContentPage
 {
     Color _currentBackground;
+    PreferenceServices services;
+    Stack<visualLvls> _uiStack;
     enum visualLvls
     {
         Reading,
@@ -17,9 +19,6 @@ public partial class ReadingView : ContentPage
         backgroundColor,
         Init
     }
-        Services services;
-
-    Stack<visualLvls> _uiStack;
     string _currentFont;
     public string CurrentFont
     {
@@ -41,7 +40,7 @@ public partial class ReadingView : ContentPage
     }
 
 
-    public ReadingView(ReadingViewModel viewModel, Services services)
+    public ReadingView(ReadingViewModel viewModel, PreferenceServices services)
     {
         Shell.SetTabBarIsVisible(this, false);
         InitializeComponent();
@@ -50,7 +49,7 @@ public partial class ReadingView : ContentPage
         colorCollection.ItemsSource = services.Backgrounds;
         fontpicker.ItemsSource = services.Fonts;
         this.services = services;
-        if (services.UserProfileSet)
+        if (PreferenceServices.UserProfileSet)
         {
             CurrentFont = services.Font;
             slider.Value = services.FontSize;
@@ -65,10 +64,11 @@ public partial class ReadingView : ContentPage
         colorCollection.SelectedItem = CurrentBackground;
         colorCollection.ScaleTo(0);
         Disappearing += ReadingView_Disappearing;
-        
+
         BindingContext = viewModel;
 
     }
+
 
     private void ReadingView_Disappearing(object sender, EventArgs e)
     {

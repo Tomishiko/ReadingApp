@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WuxiaClassLib", "TextScrapp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\TestProject.csproj", "{61EA2783-993D-4AFF-A67F-61114C161A8E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App", "WuxiaApp\App.csproj", "{CE3977BC-B7B0-4823-89CA-DD073AB38003}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WuxiaApp", "WuxiaApp\WuxiaApp.csproj", "{CE3977BC-B7B0-4823-89CA-DD073AB38003}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject2", "TestProject2\TestProject2.csproj", "{1BC01FC2-8A67-43FA-9AEF-B83BF92CB3B3}"
 EndProject

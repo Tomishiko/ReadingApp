@@ -359,3 +359,4 @@ MigrationBackup/
 /WuxiaApp/Resources/Raw/API/config.xml
 /WuxiaApp/Resources/Raw/API/Routes.yaml
 /WuxiaApp/appsettings.json
+/WuxiaApp/Resources/Raw/appsettings.json

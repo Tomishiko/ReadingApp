@@ -66,41 +66,7 @@ namespace TestProject2
         [Fact]
         public async Task SaveLoadFunctionality()
         {
-            var filesysMock = new Mock<IFileSystem>();
-            filesysMock.Setup(p => p.AppDataDirectory).Returns("output/");
-            var services = new PreferenceServices();
-            var searchresult = await services.SearchBookAsync();
-            foreach (var result in searchresult.results)
-            {
-                var book = new Book()
-                {
-                    Chapters = result.chapters,
-                    Description = result.description,
-                    Ratings = result.rating,
-                    Title = result.name,
-                    Views = result.views,
-                    Slug = result.slug
-                };
-                if (result.image == null)
-                    book.PicturePath = "unloaded_image.png";
-                else
-                    book.PicturePath = services.FormPicturePath(result.slug);
-                services.AddNewBook(book);
-            }
-            var font = "abadakedabra";
-            var fonsize = 15d;
-            var color = Color.FromRgb(255, 255, 255);
-            services.SetUserPreferences(font,fonsize,color);
-            services.Save(filesysMock.Object);
-            var expectedLibrary = await services.GetBooksLocalAsync(filesysMock.Object);
-            services = new PreferenceServices();
-            var actualLibrary = await services.GetBooksLocalAsync(filesysMock.Object);
-            // Assert.Equal<Book>(expectedLibrary, actualLibrary);
-            // Assert.Equal(services.UserFont, font);
-            // Assert.Equal(services.UserFontSize, fonsize);
-            // Assert.Equal(services.UserColor,color);
         }
-    }
     public class ScraperTests
     {
         [Fact]

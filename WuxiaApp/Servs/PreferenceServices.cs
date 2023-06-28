@@ -1,52 +1,59 @@
-namespace WuxiaApp.Servs;
-public class PreferenceServices : BaseServices
-{
-    public static bool UserProfileSet { get; set; } = false;
+using System.ComponentModel;
 
+namespace WuxiaApp.Servs;
+public class PreferenceServices : INotifyPropertyChanged
+{
     public readonly List<String> Fonts;
     public readonly List<Color> Backgrounds;
 
+    int _userFont;
+    double _userFontSize;
+    int _userBackColor;
+    IPreferences preferences;
 
-    public string Font { get => Fonts[_userFont]; }
-    public int FontIndex
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    public string Font
     {
-        get => _userFont;
+        get => Fonts[_userFont];
         set
         {
-            if (value >= Fonts.Count || value < 0) return;
-            else _userFont = value;
+            if (Font == value)
+                return;
+            int index = Fonts.IndexOf(value);
+            _userFont = index;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Font)));
         }
     }
-    public int BackColorIndex
+    public Color BackColor
     {
-        get => _userBackColor;
+        get => Backgrounds[_userBackColor];
         set
         {
-            if (value >= Backgrounds.Count || value < 0) return;
-            else _userBackColor = value;
+            if (value == BackColor)
+                return;
+            int index = Backgrounds.IndexOf(value);
+            _userBackColor = index;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(BackColor)));
         }
     }
-    public Color BackColor { get => Backgrounds[_userBackColor]; }
-    public double FontSize { get => _userFontSize; }
-    static PreferenceServices()
+    public double FontSize
     {
-        var path = Path.Combine(FileSystem.AppDataDirectory, "user_profile");
-        if (File.Exists(path))
+        get => _userFontSize;
+        set
         {
-            using (var stream = File.Open(path, FileMode.Open))
-            {
-                var reader = new BinaryReader(stream);
-                _userFont = reader.ReadInt32();
-                _userFontSize = reader.ReadDouble();
-                _userBackColor = reader.ReadInt32();
-            }
-            UserProfileSet = true;
+            if (value == FontSize)
+                return;
+            _userFontSize = value;
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(FontSize)));
         }
-
     }
 
-    public PreferenceServices()
+
+
+    public PreferenceServices(IPreferences preferences)
     {
+        this.preferences = preferences;
         Fonts = new List<string>
         {
             "OpenSansRegular",
@@ -56,7 +63,9 @@ public class PreferenceServices : BaseServices
             "Calibri",
             "Roboto",
             "Tahoma",
-            "TimesNewRoman"
+            "TimesNewRoman",
+            "Georgia",
+            "Merriweather"
         };
         Backgrounds = new List<Color>
         {
@@ -65,6 +74,13 @@ public class PreferenceServices : BaseServices
             Color.FromRgb(224,219,182),
             Color.FromRgb(190,190,190)
         };
+
+        BackColor = Backgrounds[preferences.Get<int>("BackColor", 0)];
+        Font = Fonts[preferences.Get<int>("Font", 0)];
+        FontSize = preferences.Get<double>("FontSize", 18.0);
+
+
+
     }
 
     /// <summary>
@@ -83,7 +99,15 @@ public class PreferenceServices : BaseServices
         _userFont = Fonts.IndexOf(font);
         _userFontSize = fontsize;
         _userBackColor = Backgrounds.IndexOf(color);
-        UserProfileSet = true;
+    }
+
+    public void Save()
+    {
+        preferences.Set(nameof(FontSize), _userFontSize);
+        preferences.Set(nameof(Font), _userFont);
+        preferences.Set(nameof(BackColor), _userBackColor);
+        
+
     }
 
 }

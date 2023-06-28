@@ -6,8 +6,6 @@ namespace WuxiaApp.Views;
 
 public partial class ReadingView : ContentPage
 {
-    Color _currentBackground;
-    PreferenceServices services;
     Stack<visualLvls> _uiStack;
     enum visualLvls
     {
@@ -19,61 +17,25 @@ public partial class ReadingView : ContentPage
         backgroundColor,
         Init
     }
-    string _currentFont;
-    public string CurrentFont
-    {
-        get => _currentFont;
-        set
-        {
-            _currentFont = value;
-            OnPropertyChanged();
-        }
-    }
-    public Color CurrentBackground
-    {
-        get => _currentBackground;
-        set
-        {
-            _currentBackground = value;
-            OnPropertyChanged();
-        }
-    }
 
+    public PreferenceServices preference { get; private set; }
 
     public ReadingView(ReadingViewModel viewModel, PreferenceServices services)
     {
+        preference = services;
         Shell.SetTabBarIsVisible(this, false);
         InitializeComponent();
         UI_Groups(visualLvls.Init, 0);
         _uiStack = new Stack<visualLvls>();
         colorCollection.ItemsSource = services.Backgrounds;
         fontpicker.ItemsSource = services.Fonts;
-        this.services = services;
-        if (PreferenceServices.UserProfileSet)
-        {
-            CurrentFont = services.Font;
-            slider.Value = services.FontSize;
-            colorCollection.SelectedItem = services.BackColor;
-        }
-        else
-        {
-            CurrentFont = services.Fonts[0];
-            CurrentBackground = services.Backgrounds[0];
-            slider.Value = 14;
-        }
-        colorCollection.SelectedItem = CurrentBackground;
+        colorCollection.SelectedItem = services.BackColor;
         colorCollection.ScaleTo(0);
-        Disappearing += ReadingView_Disappearing;
 
         BindingContext = viewModel;
-
     }
 
 
-    private void ReadingView_Disappearing(object sender, EventArgs e)
-    {
-        services.SetUserPreferences(CurrentFont, slider.Value, CurrentBackground);
-    }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {
@@ -126,7 +88,6 @@ public partial class ReadingView : ContentPage
         TapGestureRecognizer_Tapped(this, new TappedEventArgs(e));
         vm.GoToChapAsync(chapto as int?);
         Scroll?.ScrollToAsync(0, 0, true);
-        //await Navigation.PushModalAsync(new GotoChapDialogBox(vm.CurrentBook));
 
     }
 
@@ -226,7 +187,7 @@ public partial class ReadingView : ContentPage
     private async void Fontpicker_ItemTapped(object sender, ItemTappedEventArgs e)
     {
         var toClose = _uiStack.Pop();
-        CurrentFont = e.Item as string;
+        preference.Font = e.Item as string;
         UI_Groups(toClose, 0);
     }
 
@@ -238,8 +199,6 @@ public partial class ReadingView : ContentPage
 
     private void colorCollection_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var color = e.CurrentSelection[0] as Color;
-        Scroll.BackgroundColor = color;
-        CurrentBackground = color;
+        preference.BackColor = e.CurrentSelection[0] as Color;
     }
 }

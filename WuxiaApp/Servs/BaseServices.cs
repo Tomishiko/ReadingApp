@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.WebUtilities;
 using System.Net.Http.Headers;
 using Scraper;
 using System.Xml;
+using Microsoft.Extensions.Configuration;
+using System.Xml.Linq;
 
 namespace WuxiaApp.Servs;
 public enum picParams
@@ -18,57 +20,38 @@ public enum picParams
 
 public class BaseServices
 {
-    static protected int _userFont;
-    static protected double _userFontSize;
-    static protected int _userBackColor;
+
     static protected HttpClient client;
     /// <summary>
     /// auxiliary collection for forming image path
     /// </summary>
-    static readonly Dictionary<picParams, string> ImageParams;
-    static readonly string api;
-    static readonly string hostSite;
+    readonly Dictionary<picParams, string> ImageParams;
+    readonly string api;
+    readonly string hostSite;
+    readonly PreferenceServices preference;
     Dictionary<string, Book> books = new Dictionary<string, Book>();
 
     WuxiaScraper scraper;
 
 
-    static BaseServices()
+    public BaseServices(){ }
+    public BaseServices(IConfiguration conf,PreferenceServices preference)
     {
-        var doc = new XmlDocument();
-        using var stream = FileSystem.OpenAppPackageFileAsync(@"API/config.xml");
-        doc.Load(stream.GetAwaiter().GetResult());
-        var node = doc.DocumentElement.SelectSingleNode("/config/api");
-        api = node.Attributes[0].InnerText;
-        hostSite = node.Attributes[1].InnerText;
-        node = doc.DocumentElement.SelectSingleNode("/config/images");
-        ImageParams = new()
-        {
-            [picParams.preview] = ".webp?width=150&quality=60",
-            [picParams.bigpic] = ".webp",
-            [picParams.source] = node.Attributes[0].InnerText
-
-        };
-
-        //api = "https://wuxia.click/api/";
-        //hostSite = "https://wuxia.click/";
-        ////node = doc.DocumentElement.SelectSingleNode("/config/images");
-        //ImageParams = new()
-        //{
-        //    [picParams.preview] = ".webp?width=150&quality=60",
-        //    [picParams.bigpic] = ".webp",
-        //    [picParams.source] = "https://wuxiaworldeu.b-cdn.net/original/"
-        //};
-    }
-    public BaseServices()
-    {
-
+        this.preference = preference;
+        api = conf.GetRequiredSection("api").Value;
+        hostSite = conf.GetRequiredSection("host").Value;
         client = new HttpClient() { BaseAddress = new Uri(api) };
         client.DefaultRequestHeaders.Accept.Add(
             new MediaTypeWithQualityHeaderValue("application/json"));
         scraper = new WuxiaScraper();
         books = new Dictionary<string, Book>();
-        //UserProfileSet = false;
+        ImageParams = new()
+        {
+            [picParams.preview] = ".webp?width=150&quality=60",
+            [picParams.bigpic] = ".webp",
+            [picParams.source] = conf.GetRequiredSection("images").Value
+
+        };
 
     }
 
@@ -83,25 +66,9 @@ public class BaseServices
 
         if (books?.Count > 0)
             return books;
-
-
         var contents = await File.ReadAllTextAsync(Path.Combine(fileSystem.AppDataDirectory, "library.dat"));
         books = JsonSerializer.Deserialize<Dictionary<string, Book>>(contents);
-        //var path = Path.Combine(fileSystem.AppDataDirectory, "user_profile");
-        //if (File.Exists(path))
-        //{
-        //    using (var stream = File.Open(path, FileMode.Open))
-        //    {
-        //        var reader = new BinaryReader(stream);
-        //        _userFont = reader.ReadInt32();
-        //        _userFontSize = reader.ReadDouble();
-        //        _userBackColor = reader.ReadInt32();
-        //    }
-        //    UserProfileSet = true;
-        //}
-
-
-
+        
         return books;
     }
 
@@ -197,7 +164,6 @@ public class BaseServices
         var content = JsonSerializer.Serialize(books);
         try
         {
-
             using (var stream = File.Open(
             Path.Combine(fileSystem.AppDataDirectory, "library.dat"),
             FileMode.Create))
@@ -205,16 +171,7 @@ public class BaseServices
                 using var writer = new StreamWriter(stream);
                 writer.WriteLine(content);
             }
-            using (var stream = File.Open(
-            Path.Combine(fileSystem.AppDataDirectory, "user_profile"),
-            FileMode.Create))
-            {
-                var writer = new BinaryWriter(stream);
-                writer.Write(_userFont);
-                writer.Write(_userFontSize);
-                writer.Write(_userBackColor);
-
-            }
+            preference.Save();
         }
         catch (Exception ex)
         {

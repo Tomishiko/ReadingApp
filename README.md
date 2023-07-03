@@ -1,9 +1,10 @@
 # ReadingApp
-Crossplatform wuxia reading app
-Simple mobile app for wuxia website
+Crossplatform reading app, simple mobile app for reading wuxia online.
+
+<img src=images/library.jpg height=400 width=200/>
 
 ## Change log:
 ## Palanned features:
-- Add TTS 
-- Add category search
-- Advanced filtering
+- [ ] Add TTS 
+- [ ] Add category search
+- [ ] Advanced filtering

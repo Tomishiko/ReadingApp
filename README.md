@@ -3,13 +3,13 @@ Crossplatform reading app, simple mobile app for reading wuxia online.
 
 
 <div align="center">
-  <img src=images/library.jpg height=672 width=303 align="left"/>
-  
-  <img src=images/reading.jpg height=672 width=303 align="right"/>
+  <img src=images/library.jpg height=672 width=303 />
+
+  <img src=images/reading.jpg height=672 width=303 />
 </div>
 <div align="center">
-  <img src=images/popular.jpg height=672 width=303 align="left"/> 
-  <img src=images/details.jpg height=672 width=303 align="right"/>  
+  <img src=images/popular.jpg height=672 width=303 /> 
+  <img src=images/details.jpg height=672 width=303 />  
 </div>
 
 ## Currently featured

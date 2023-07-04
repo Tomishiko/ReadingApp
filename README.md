@@ -2,12 +2,12 @@
 Crossplatform reading app, simple mobile app for reading wuxia online.
 
 
-<div align="top">
+<div align="center">
   <img src=images/library.jpg height=672 width=303 align=""/>
   
   <img src=images/reading.jpg height=672 width=303 align=""/>
 </div>
-<div align="bottom">
+<div align="center">
   <img src=images/popular.jpg height=672 width=303 align=""/> 
   <img src=images/details.jpg height=672 width=303 align=""/>  
 </div>

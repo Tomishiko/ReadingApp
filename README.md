@@ -1,10 +1,25 @@
 # ReadingApp
 Crossplatform reading app, simple mobile app for reading wuxia online.
 
-<img src=images/library.jpg height=400 width=200/>
+
+<div align="top">
+  <img src=images/library.jpg height=672 width=303 align="left"/>
+  <img src=images/popular.jpg height=672 width=303 align="center"/>  
+  <img src=images/reading.jpg height=672 width=303 align="right"/>
+</div>
+
+## Currently featured
+- font size&family settings
+- background color selection
+- discover new books with popular tab
+- search books by name (more search options will be addded in the future)
+- library for keeping track of books currently reading
+
 
 ## Change log:
 ## Palanned features:
 - [ ] Add TTS 
 - [ ] Add category search
 - [ ] Advanced filtering
+
+

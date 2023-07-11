@@ -34,7 +34,9 @@ public class BaseServices
     WuxiaScraper scraper;
 
 
-    public BaseServices(){ }
+    public BaseServices(){
+        
+     }
     public BaseServices(IConfiguration conf,PreferenceServices preference)
     {
         this.preference = preference;

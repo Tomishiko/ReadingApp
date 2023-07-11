@@ -11,6 +11,7 @@
              Shell.NavBarIsVisible="False"
              Title="{Binding CurrentBook.Title}"
              x:Name="Page">
+
     <ContentPage.Resources>
         <conv:BookPathToBoolConvert x:Key="BookPathToBool" />
         <conv:ContrastColorConverter x:Key="ContrastColor" />
@@ -146,6 +147,12 @@
             </Style.Triggers>
         </Style>
     </ContentPage.Resources>
+    <ContentPage.Behaviors>
+        <!--StatusBarStyle="{Binding Source={x:Reference Page}, Path=preference.BackColor,Converter={StaticResource ContrastColor}}"-->
+
+        <toolkit:StatusBarBehavior StatusBarColor="{Binding Source={x:Reference Page}, Path=preference.BackColor}"
+                                   StatusBarStyle="{Binding Source={x:Reference Page}, Path=preference.BackColor,Converter={StaticResource ContrastColor}}" />
+    </ContentPage.Behaviors>
     <Grid x:Name="MainGrid">
         <Grid x:Name="DockTop"
               ColumnDefinitions="50,*,55"

@@ -1,4 +1,4 @@
-# ReadingApp
+# Wuxia Reading App
 <div align=center>
   <img src=images/reading_icon.svg width=150 height=150 style=" padding-bottom: 30px">
 </div>

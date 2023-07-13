@@ -26,7 +26,7 @@
      inkscape:document-units="mm"
      showgrid="false"
      inkscape:zoom="0.70710678"
-     inkscape:cx="794.08092"
+     inkscape:cx="765.79665"
      inkscape:cy="388.90873"
      inkscape:window-width="1920"
      inkscape:window-height="1057"
@@ -66,7 +66,7 @@
        x2="65.277649"
        y2="602.85834"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.37041668,0,0,0.38567412,-22.148005,-21.883901)" />
+       gradientTransform="matrix(0.36714192,0,0,0.37737251,-22.332195,-19.714363)" />
     <clipPath
        clipPathUnits="userSpaceOnUse"
        id="clipPath9150">
@@ -84,29 +84,15 @@
          class="powerclip"
          d="M 305.45529,-1.5516434 H 556.51836 V 180.90114 H 305.45529 Z M 554.53078,28.998743 a 17.399246,64.919769 0 0 0 -17.39925,-64.919769 17.399246,64.919769 0 0 0 -17.39925,64.919769 17.399246,64.919769 0 0 0 17.39925,64.919769 17.399246,64.919769 0 0 0 17.39925,-64.919769 z" />
     </clipPath>
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter10624"
-       x="-0.10372321"
-       y="-0.1037232"
-       width="1.2074464"
-       height="1.2074464">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="9.3231131"
-         id="feGaussianBlur10626" />
-    </filter>
   </defs>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1">
     <path
-       style="mix-blend-mode:normal;fill:url(#linearGradient403);fill-opacity:1;stroke-width:0.48378;filter:url(#filter10624)"
-       d="M -2.7092356,104.9829 V -2.8785637 H 105.15222 213.01368 V 104.9829 212.84436 H 105.15222 -2.7092356 Z"
-       id="path395"
-       transform="matrix(0.93391983,0,0,0.92817373,6.2001222,6.4179983)" />
+       style="mix-blend-mode:normal;fill:url(#linearGradient403);fill-opacity:1;stroke-width:0.476425"
+       d="M -3.0652788,104.42164 V -1.1181143 H 103.8426 210.75048 V 104.42164 209.96138 H 103.8426 -3.0652788 Z"
+       id="path395" />
     <path
        style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:14.4126;stroke-dasharray:none;stroke-opacity:1"
        id="path1418"

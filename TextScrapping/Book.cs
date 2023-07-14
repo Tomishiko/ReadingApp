@@ -20,7 +20,7 @@ public partial class Book: IEquatable<Book>,INotifyPropertyChanged
             if(readed != value)
             {
                 readed = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Readed"));
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Readed)));
             }
 
         }

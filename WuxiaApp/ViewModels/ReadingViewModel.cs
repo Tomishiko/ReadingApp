@@ -8,8 +8,9 @@ namespace WuxiaApp.ViewModels;
 
 public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyPropertyChanged
 {
-    Services services;
+    BaseServices services;
     string currentChapterPath;
+    
     [ObservableProperty]
     string nextChapterPath;
     [ObservableProperty]
@@ -21,9 +22,7 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
     [ObservableProperty]
     Book currentBook;
 
-    //ChapterData chapterData;
-    //public event PropertyChangedEventHandler PropertyChanged;
-    public ReadingViewModel(Services services)
+    public ReadingViewModel(BaseServices services)
     {
         this.services = services;
 
@@ -59,7 +58,7 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
         {
             var chapterData = await services.FetchChapterAsync(chapterPath);
             ChapName = chapterData.title;
-            Text = chapterData.text;//ParagraphParser(chapterData.text);
+            Text = chapterData.text.Replace("\n", "\n\n");//ParagraphParser(chapterData.text);
             NextChapterPath = string.Concat(CurrentBook.Slug ,"-",chapterData.nextChap);
             PrevChapterPath = string.Concat(CurrentBook.Slug ,"-",chapterData.prevChap);
             
@@ -80,6 +79,10 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
         currentChapterPath = CurrentBook.Slug + $"-{chapNumber}";
         await LoadText(currentChapterPath);
 
+    }
+    string ParseParagraphs(string originalText)
+    {
+       return originalText.Replace("\n", "\n\n");
     }
 
 }

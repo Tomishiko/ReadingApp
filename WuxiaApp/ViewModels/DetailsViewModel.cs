@@ -11,14 +11,14 @@ namespace WuxiaApp.ViewModels;
 //[QueryProperty(nameof(Name),"Book")]
 public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
 {
-    readonly Services services;
+    readonly BaseServices services;
     readonly LibraryViewModel libraryViewModel;
 
     [ObservableProperty]
     Book book;
     [ObservableProperty]
     bool? isInLibrary = false;
-    public DetailsViewModel(Services services,LibraryViewModel libVm)
+    public DetailsViewModel(BaseServices services,LibraryViewModel libVm)
     {
         libraryViewModel = libVm;
         this.services = services;
@@ -57,10 +57,8 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
                 Ranking = bookinfo.ranking,
                 Slug=bookinfo.slug
             };
-            if (bookinfo.image == null)
-                book.PicturePath = "unloaded_image.png";
-            else
-                book.PicturePath = services.FormPicturePath(bookinfo.slug,"bigpic");
+            book.PicturePath = services.FormPicturePath(bookinfo.image,bookinfo.slug);
+                
             
             Book = book;
             if (services.CheckBookInLib(book))
@@ -87,6 +85,7 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
         services.AddNewBook(book);
         libraryViewModel.Books.Add(book);
     }
+    //Button command for AddToLib Button
     [RelayCommand]
     async Task ButtonClickedAsync(Book book)
     {

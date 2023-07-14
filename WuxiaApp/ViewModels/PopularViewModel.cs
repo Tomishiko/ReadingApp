@@ -11,6 +11,9 @@ namespace WuxiaApp.ViewModels;
 
 public partial class UICollectionElement : ObservableObject
 {
+    
+    internal Uri nextDataChunk;
+
     [NotifyPropertyChangedFor(nameof(IsNotLoading))]
     [ObservableProperty]
     bool isLoading;
@@ -22,8 +25,6 @@ public partial class UICollectionElement : ObservableObject
     string categoryName;
     [ObservableProperty]
     int opacity;
-    internal Uri nextDataChunk;
-
     public ICommand TriggerAnimationCommand { get; set; }
 
     public UICollectionElement(string category)
@@ -37,9 +38,9 @@ public partial class UICollectionElement : ObservableObject
 
 public partial class PopularViewModel : BaseViewModel
 {
-    readonly Services services;
+    readonly BaseServices services;
     public ObservableCollection<UICollectionElement> Data { get; } = new();
-    public PopularViewModel(Services services,IConnectivity connectivity)
+    public PopularViewModel(BaseServices services,IConnectivity connectivity)
     {
         this.services = services;
         if (connectivity.NetworkAccess != NetworkAccess.Internet)
@@ -96,8 +97,10 @@ public partial class PopularViewModel : BaseViewModel
         //List<Book> books = new();
         if(currentElement.Books.Count !=0)
             currentElement.Books.Clear();
-        searchResult searchresult;
-        searchresult = await services.SearchBookAsync(category: searchPattern, ordering: order, limit: "4");
+        var searchresult = await services.SearchBookAsync(category: searchPattern, ordering: order, limit: "4");
+        if(searchresult is null)
+            return;
+
         currentElement.nextDataChunk = new Uri(searchresult.next);
         foreach (var result in searchresult.results)
         {
@@ -110,18 +113,11 @@ public partial class PopularViewModel : BaseViewModel
                 Views = result.views,
                 Slug = result.slug
             };
-            if (result.image == null)
-                book.PicturePath = "unloaded_image.png";
-            else
-                book.PicturePath = services.FormPicturePath(result.slug);
+            book.PicturePath = services.FormPicturePath(result.image,result.slug);
             currentElement.Books.Add(book);
         }
 
-        //currentElement.TriggerAnimationCommand.Execute(null);
         currentElement.IsLoading = false;
-
-
-        //return books;
 
     }
 
@@ -147,10 +143,7 @@ public partial class PopularViewModel : BaseViewModel
                     Views = result.views,
                     Slug = result.slug
                 };
-                if (result.image == null)
-                    book.PicturePath = "unloaded_image.png";
-                else
-                    book.PicturePath = services.FormPicturePath(result.slug);
+                book.PicturePath = services.FormPicturePath(result.image,result.slug);
                 currentElement.Books.Add(book);
             }
         }

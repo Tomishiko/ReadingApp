@@ -24,7 +24,7 @@ public class BookInfo
     public string rating { get; set; }
     public string original_image { get; set; }
     public bool dmca { get; set; }
-    public Other_Names other_names { get; set; }
+    //public string[] other_names { get; set; }
     public int ranking { get; set; }
     public string human_views { get; set; }
 }

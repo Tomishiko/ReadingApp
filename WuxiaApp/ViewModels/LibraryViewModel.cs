@@ -10,18 +10,19 @@ namespace WuxiaApp.ViewModels;
 
 public partial class LibraryViewModel : BaseViewModel
 {
-    public ObservableCollection<Book> Books { get; } = new();
-    readonly Services services;
+    readonly BaseServices services;
     readonly string libPath;
-    public LibraryViewModel(Services services,IConnectivity connectivity):base(connectivity)
+    public ObservableCollection<Book> Books { get; } = new();
+    public LibraryViewModel(BaseServices services,IConnectivity connectivity):base(connectivity)
     {
         libPath = Path.Combine(FileSystem.Current.AppDataDirectory, "library.dat");
         this.services = services;
-        if (!File.Exists(libPath))
-        {
-            Task t = Task.Run(async () => await CopyLocals());
-            t.Wait();
-        }
+
+        //if (!File.Exists(libPath))
+        //{
+        //    Task t = Task.Run(async () => await CopyLocals());
+        //    t.Wait();
+        //}
 
         Task.Run(async () => await GetBooksAsync());
         Title = "Library";
@@ -89,7 +90,7 @@ public partial class LibraryViewModel : BaseViewModel
             await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
 
         }
-        finally { IsBusy = false; }
+        finally { IsBusy = false;  }
     }
     [RelayCommand]
     async Task ButtonClickedAsync(Book book)

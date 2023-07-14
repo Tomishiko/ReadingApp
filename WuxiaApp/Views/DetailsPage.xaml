@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:model="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
@@ -9,8 +9,6 @@
              Title="{Binding Book.Title}"
              x:Name="DetailsView"
              Shell.PresentationMode="ModalAnimated">
-
-
     <ContentPage.Resources>
         <Style TargetType="VerticalStackLayout">
             <Setter Property="BackgroundColor"
@@ -19,10 +17,8 @@
         <Style TargetType="Frame">
             <Setter Property="BackgroundColor"
                     Value="{AppThemeBinding Light={StaticResource White},Dark={StaticResource Gray900}}" />
-
         </Style>
     </ContentPage.Resources>
-
     <Grid>
         <Image Source="{Binding Book.PicturePath}"
                HorizontalOptions="CenterAndExpand"
@@ -43,16 +39,14 @@
                                 HorizontalOptions="Center"
                                 Style="{StaticResource BtnStyle}"
                                 Command="{Binding ButtonClickedCommand}"
-                                CommandParameter="{Binding Book}"
-                                />
-                        <Border  Margin="20"
-                                 StrokeThickness="1"
-                                 BackgroundColor="{StaticResource Gray200}"
-                                 WidthRequest="500" />
+                                CommandParameter="{Binding Book}" />
+                        <Border Margin="20"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource Gray200}"
+                                WidthRequest="500" />
                         <Label Text="{Binding Book.Title}"
                                FontSize="20"
                                FontAttributes="Bold" />
-
                         <CollectionView ItemsSource="{Binding Book.Categories}"
                                         SelectionMode="None"
                                         ItemSizingStrategy="MeasureAllItems"
@@ -80,34 +74,25 @@
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
                         </CollectionView>
-
                         <Label Text="{Binding Book.Author.name,StringFormat= 'Author: {0}'}"
                                FontSize="14.5"
                                FontAttributes="Bold" />
-                        <Border  Margin="20"
-                                 StrokeThickness="1"
-                                 BackgroundColor="{StaticResource Gray200}"
-                                 WidthRequest="500" />
+                        <Border Margin="20"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource Gray200}"
+                                WidthRequest="500" />
                         <Label Text="{Binding Book.Description}"
                                Style="{StaticResource Description}" />
-
-                        <Border  Margin="20"
-                                 StrokeThickness="1"
-                                 BackgroundColor="{StaticResource Gray200}"
-                                 WidthRequest="500" />
+                        <Border Margin="20"
+                                StrokeThickness="1"
+                                BackgroundColor="{StaticResource Gray200}"
+                                WidthRequest="500" />
                         <Button x:Name="AddButton"
                                 Text="Add to library"
                                 Style="{StaticResource BtnStyle}"
                                 Command="{Binding AddNewBookCommand}"
                                 CommandParameter="{Binding Book}"
-                                Clicked="Button_Clicked"
-                                />
-
-
-                        <!--<Button Text="Add to library"
-                                    ImageSource="icon_book_64.png"
-                                    ContentLayout="Left,0"
-                                    Style="{StaticResource BtnStyle}" />-->
+                                Clicked="Button_Clicked" />
                     </VerticalStackLayout>
                 </Frame>
             </VerticalStackLayout>

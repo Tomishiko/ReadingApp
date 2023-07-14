@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
@@ -7,7 +7,6 @@
              xmlns:model="clr-namespace:General.DataModels;assembly=WuxiaClassLib"
              x:DataType="viewmodel:LibraryViewModel"
              x:Name="LibraryView">
-
     <ContentPage.Behaviors>
         <toolkit:StatusBarBehavior StatusBarColor="{AppThemeBinding Dark={StaticResource Black}, Light=White}"
                                    StatusBarStyle="{AppThemeBinding Dark=LightContent, Light=DarkContent}" />
@@ -35,27 +34,16 @@
             </Style>
         </ResourceDictionary>
     </ContentPage.Resources>
-
     <Grid RowDefinitions="*,Auto"
           RowSpacing="0">
-
-
         <CollectionView ItemsSource="{Binding Books}"
-                        SelectionMode="None">
-            <!--SelectionChangedCommand="{Binding NavigateToDetailsCommand}"
-                        SelectionChangedCommandParameter="{Binding Source={RelativeSource Self},Path=SelectedItem}"
-                        SelectionChanged="CollectionView_SelectionChanged"-->
-
-
+                        SelectionMode="None"
+                        EmptyView="There is no books yet!">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Book">
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems Mode="Reveal">
-                                <!--<SwipeItem IconImageSource="icons_waste.png"
-                                           Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.DeleteLastBookCommand}"
-                                           CommandParameter="{Binding}" 
-                                           BackgroundColor="White"/>-->
                                 <SwipeItemView HeightRequest="100"
                                                Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.DeleteLastBookCommand}"
                                                CommandParameter="{Binding}">
@@ -75,12 +63,11 @@
                                 <Grid.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding Source={x:Reference LibraryView},Path=BindingContext.NavigateToDetailsCommand}"
                                                           CommandParameter="{Binding .}" />
-
                                 </Grid.GestureRecognizers>
-                                <Image Source="{Binding PicturePath}"
+                                <Image Grid.Column="0"
+                                       Source="{Binding PicturePath}"
                                        WidthRequest="150"
-                                       HeightRequest="190"
-                                       Grid.Column="0" />
+                                       HeightRequest="190" />
                                 <VerticalStackLayout Grid.Column="1"
                                                      Spacing="2">
                                     <Label Text="{Binding  Title}"
@@ -108,19 +95,14 @@
                                             </FormattedString>
                                         </Label.FormattedText>
                                     </Label>
-
                                 </VerticalStackLayout>
                                 <VerticalStackLayout VerticalOptions="End"
                                                      Grid.Column="1"
                                                      HorizontalOptions="Start">
-
-
-
-
-                                    <Label  VerticalOptions="End"
-                                            Style="{StaticResource DescriptionStyle}"
-                                            FontFamily="SegoeSemiBold"
-                                            TextColor="{StaticResource PrimaryLighted}">
+                                    <Label VerticalOptions="End"
+                                           Style="{StaticResource DescriptionStyle}"
+                                           FontFamily="SegoeSemiBold"
+                                           TextColor="{StaticResource PrimaryLighted}">
                                         <Label.Text>
                                             <MultiBinding StringFormat="{}Chapters {0}\{1}">
                                                 <Binding Path="Readed" />
@@ -140,8 +122,6 @@
                                             </MultiBinding>
                                         </ProgressBar.Progress>
                                     </ProgressBar>
-
-
                                     <Button Style="{StaticResource BtnStyle}"
                                             VerticalOptions="End"
                                             HorizontalOptions="Start"
@@ -154,28 +134,14 @@
                             </Grid>
                         </VerticalStackLayout>
                     </SwipeView>
-
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
         <ActivityIndicator IsVisible="{Binding IsBusy}"
                            IsRunning="{Binding IsBusy}"
                            HorizontalOptions="Fill"
                            VerticalOptions="Center"
                            Grid.RowSpan="2"
                            Grid.ColumnSpan="2" />
-        <!--<ActivityIndicator IsVisible="True"
-                           IsRunning="True"
-                           
-                           HorizontalOptions="Fill"
-                           VerticalOptions="Center"
-                           Grid.RowSpan="2"
-                           Grid.ColumnSpan="2"
-                           Color="Black"/>-->
-
-
     </Grid>
-
-
 </ContentPage>

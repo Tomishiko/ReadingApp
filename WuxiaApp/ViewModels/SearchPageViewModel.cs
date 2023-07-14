@@ -17,15 +17,14 @@ namespace WuxiaApp.ViewModels;
 
 public partial class SearchPageViewModel : BaseViewModel
 {
+    BaseServices services;
+    Uri nextData;
     public ObservableCollection<Book> Books { get; } = new();
     [ObservableProperty]
     bool isLoadingNewData=false;
     [ObservableProperty]
     uint footer;
-    
-    readonly Services services;
-    Uri nextData;
-    public SearchPageViewModel(Services services)
+    public SearchPageViewModel(BaseServices services)
     {
         this.services = services;
         Title = "Search";
@@ -74,10 +73,7 @@ public partial class SearchPageViewModel : BaseViewModel
                     Views = result.views,
                     Slug = result.slug
                 };
-                if (result.image == null)
-                    book.PicturePath = "unloaded_image.png";
-                else
-                    book.PicturePath = services.FormPicturePath(result.slug);
+                book.PicturePath = services.FormPicturePath(result.image, result.slug, picParams.preview);
                 Books.Add(book);
             }
                 
@@ -124,10 +120,7 @@ public partial class SearchPageViewModel : BaseViewModel
                     Views = result.views,
                     Slug = result.slug
                 };
-                if (result.image == null)
-                    book.PicturePath = "unloaded_image.png";
-                else
-                    book.PicturePath = services.FormPicturePath(result.slug);
+                book.PicturePath = services.FormPicturePath(result.image, result.slug);
                 Books.Add(book);
             }
         }

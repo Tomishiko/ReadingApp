@@ -350,3 +350,13 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 /WuxiaApp/Resources/Fonts
+# vscode specific files
+.vscode/launch.json
+.vscode/tasks.json
+.vscode/uno.vscode.props
+.vscode/settings.json
+/WuxiaApp/Resources/API/Routes.yaml
+/WuxiaApp/Resources/Raw/API/config.xml
+/WuxiaApp/Resources/Raw/API/Routes.yaml
+/WuxiaApp/appsettings.json
+/WuxiaApp/Resources/Raw/appsettings.json

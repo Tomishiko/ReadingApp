@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TextScrapping\WuxiaClassLib.csproj" />
-    <ProjectReference Include="..\WuxiaApp\App.csproj" />
+    <ProjectReference Include="..\WuxiaApp\WuxiaApp.csproj" />
   </ItemGroup>
 
 </Project>

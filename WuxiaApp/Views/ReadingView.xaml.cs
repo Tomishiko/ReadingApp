@@ -6,6 +6,7 @@ namespace WuxiaApp.Views;
 
 public partial class ReadingView : ContentPage
 {
+    Stack<visualLvls> _uiStack;
     enum visualLvls
     {
         Reading,
@@ -16,62 +17,42 @@ public partial class ReadingView : ContentPage
         backgroundColor,
         Init
     }
-    Stack<visualLvls> _uiStack;
-    string _currentFont;
-    public string CurrentFont
-    {
-        get => _currentFont;
-        set
-        {
-            _currentFont = value;
-            OnPropertyChanged();
-        }
-    }
-    public Color CurrentBackground
-    {
-        get => _currentBackground;
-        set
-        {
-            _currentBackground = value;
-            OnPropertyChanged();
-        }
-    }
 
-    Color _currentBackground;
-
-    Services services;
-    public ReadingView(ReadingViewModel viewModel, Services services)
+    public PreferenceServices preference { get; private set; }
+    public List<string> Fonts { get { return PreferenceServices.Fonts; } }
+    public List<Color> Backgrounds { get { return PreferenceServices.Backgrounds; } }
+    
+    public ReadingView(ReadingViewModel viewModel, PreferenceServices services)
     {
+        preference = services;
         Shell.SetTabBarIsVisible(this, false);
         InitializeComponent();
+        fontpicker.BindingContext = this;
+        colorCollection.BindingContext = this;
         UI_Groups(visualLvls.Init, 0);
         _uiStack = new Stack<visualLvls>();
-        colorCollection.ItemsSource = services.Backgrounds;
-        fontpicker.ItemsSource = services.Fonts;
-        this.services = services;
-        if (services.UserProfileSet)
-        {
-            CurrentFont = services.Font;
-            slider.Value = services.FontSize;
-            colorCollection.SelectedItem = services.BackColor;
-        }
-        else
-        {
-            CurrentFont = services.Fonts[0];
-            CurrentBackground = services.Backgrounds[0];
-            slider.Value = 14;
-        }
-        colorCollection.SelectedItem = CurrentBackground;
+        //colorCollection.ItemsSource = services.Backgrounds;
+        //fontpicker.ItemsSource = services.Fonts;
+        colorCollection.SelectedItem = services.BackColor;
         colorCollection.ScaleTo(0);
-        Disappearing += ReadingView_Disappearing;
-        
+        this.Disappearing += ReadingView_Disappearing;
         BindingContext = viewModel;
-
     }
 
     private void ReadingView_Disappearing(object sender, EventArgs e)
     {
-        services.SetUserPreferences(CurrentFont, slider.Value, CurrentBackground);
+
+        var currentTheme = Application.Current.RequestedTheme;
+        if(currentTheme == AppTheme.Dark)
+        {
+            StatusBar.StatusBarColor = Color.FromRgb(0, 0, 0);
+            StatusBar.StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.LightContent;
+        }
+        else
+        {
+            StatusBar.StatusBarColor = Color.FromRgb(255, 255, 255);
+            StatusBar.StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.DarkContent;
+        }
     }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
@@ -125,7 +106,6 @@ public partial class ReadingView : ContentPage
         TapGestureRecognizer_Tapped(this, new TappedEventArgs(e));
         vm.GoToChapAsync(chapto as int?);
         Scroll?.ScrollToAsync(0, 0, true);
-        //await Navigation.PushModalAsync(new GotoChapDialogBox(vm.CurrentBook));
 
     }
 
@@ -225,7 +205,7 @@ public partial class ReadingView : ContentPage
     private async void Fontpicker_ItemTapped(object sender, ItemTappedEventArgs e)
     {
         var toClose = _uiStack.Pop();
-        CurrentFont = e.Item as string;
+        preference.Font = e.Item as string;
         UI_Groups(toClose, 0);
     }
 
@@ -237,8 +217,6 @@ public partial class ReadingView : ContentPage
 
     private void colorCollection_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        var color = e.CurrentSelection[0] as Color;
-        Scroll.BackgroundColor = color;
-        CurrentBackground = color;
+        preference.BackColor = e.CurrentSelection[0] as Color;
     }
 }

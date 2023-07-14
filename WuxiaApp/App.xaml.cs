@@ -5,8 +5,8 @@ namespace WuxiaApp
 {
     public partial class App : Application
     {
-        Services services;
-        public App(Services services)
+        BaseServices services;
+        public App(BaseServices services)
         {
             InitializeComponent();
             MainPage = new AppShell();

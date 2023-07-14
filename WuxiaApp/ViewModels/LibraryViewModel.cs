@@ -17,11 +17,12 @@ public partial class LibraryViewModel : BaseViewModel
     {
         libPath = Path.Combine(FileSystem.Current.AppDataDirectory, "library.dat");
         this.services = services;
-        if (!File.Exists(libPath))
-        {
-            Task t = Task.Run(async () => await CopyLocals());
-            t.Wait();
-        }
+
+        //if (!File.Exists(libPath))
+        //{
+        //    Task t = Task.Run(async () => await CopyLocals());
+        //    t.Wait();
+        //}
 
         Task.Run(async () => await GetBooksAsync());
         Title = "Library";
@@ -89,7 +90,7 @@ public partial class LibraryViewModel : BaseViewModel
             await Shell.Current.DisplayAlert("Error!", ex.Message, "OK");
 
         }
-        finally { IsBusy = false; }
+        finally { IsBusy = false;  }
     }
     [RelayCommand]
     async Task ButtonClickedAsync(Book book)

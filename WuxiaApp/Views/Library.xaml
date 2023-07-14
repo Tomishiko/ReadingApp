@@ -37,7 +37,8 @@
     <Grid RowDefinitions="*,Auto"
           RowSpacing="0">
         <CollectionView ItemsSource="{Binding Books}"
-                        SelectionMode="None">
+                        SelectionMode="None"
+                        EmptyView="There is no books yet!">
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:Book">
                     <SwipeView>

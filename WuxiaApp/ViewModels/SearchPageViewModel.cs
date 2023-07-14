@@ -73,10 +73,7 @@ public partial class SearchPageViewModel : BaseViewModel
                     Views = result.views,
                     Slug = result.slug
                 };
-                if (result.image == null)
-                    book.PicturePath = "unloaded_image.png";
-                else
-                    book.PicturePath = services.FormPicturePath(result.slug);
+                book.PicturePath = services.FormPicturePath(result.image, result.slug, picParams.preview);
                 Books.Add(book);
             }
                 
@@ -123,10 +120,7 @@ public partial class SearchPageViewModel : BaseViewModel
                     Views = result.views,
                     Slug = result.slug
                 };
-                if (result.image == null)
-                    book.PicturePath = "unloaded_image.png";
-                else
-                    book.PicturePath = services.FormPicturePath(result.slug);
+                book.PicturePath = services.FormPicturePath(result.image, result.slug);
                 Books.Add(book);
             }
         }

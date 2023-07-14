@@ -19,23 +19,41 @@ public partial class ReadingView : ContentPage
     }
 
     public PreferenceServices preference { get; private set; }
-
+    public List<string> Fonts { get { return PreferenceServices.Fonts; } }
+    public List<Color> Backgrounds { get { return PreferenceServices.Backgrounds; } }
+    
     public ReadingView(ReadingViewModel viewModel, PreferenceServices services)
     {
         preference = services;
         Shell.SetTabBarIsVisible(this, false);
         InitializeComponent();
+        fontpicker.BindingContext = this;
+        colorCollection.BindingContext = this;
         UI_Groups(visualLvls.Init, 0);
         _uiStack = new Stack<visualLvls>();
-        colorCollection.ItemsSource = services.Backgrounds;
-        fontpicker.ItemsSource = services.Fonts;
+        //colorCollection.ItemsSource = services.Backgrounds;
+        //fontpicker.ItemsSource = services.Fonts;
         colorCollection.SelectedItem = services.BackColor;
         colorCollection.ScaleTo(0);
-
+        this.Disappearing += ReadingView_Disappearing;
         BindingContext = viewModel;
     }
 
+    private void ReadingView_Disappearing(object sender, EventArgs e)
+    {
 
+        var currentTheme = Application.Current.RequestedTheme;
+        if(currentTheme == AppTheme.Dark)
+        {
+            StatusBar.StatusBarColor = Color.FromRgb(0, 0, 0);
+            StatusBar.StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.LightContent;
+        }
+        else
+        {
+            StatusBar.StatusBarColor = Color.FromRgb(255, 255, 255);
+            StatusBar.StatusBarStyle = CommunityToolkit.Maui.Core.StatusBarStyle.DarkContent;
+        }
+    }
 
     private async void TapGestureRecognizer_Tapped(object sender, TappedEventArgs e)
     {

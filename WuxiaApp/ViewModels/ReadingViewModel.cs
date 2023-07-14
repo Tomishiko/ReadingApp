@@ -58,7 +58,7 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
         {
             var chapterData = await services.FetchChapterAsync(chapterPath);
             ChapName = chapterData.title;
-            Text = chapterData.text;//ParagraphParser(chapterData.text);
+            Text = chapterData.text.Replace("\n", "\n\n");//ParagraphParser(chapterData.text);
             NextChapterPath = string.Concat(CurrentBook.Slug ,"-",chapterData.nextChap);
             PrevChapterPath = string.Concat(CurrentBook.Slug ,"-",chapterData.prevChap);
             
@@ -79,6 +79,10 @@ public partial class ReadingViewModel:BaseViewModel,IQueryAttributable, INotifyP
         currentChapterPath = CurrentBook.Slug + $"-{chapNumber}";
         await LoadText(currentChapterPath);
 
+    }
+    string ParseParagraphs(string originalText)
+    {
+       return originalText.Replace("\n", "\n\n");
     }
 
 }

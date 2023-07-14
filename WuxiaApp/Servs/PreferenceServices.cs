@@ -1,10 +1,31 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace WuxiaApp.Servs;
 public class PreferenceServices : INotifyPropertyChanged
 {
-    public readonly List<String> Fonts;
-    public readonly List<Color> Backgrounds;
+    static public readonly List<string> Fonts = new List<string>
+        {
+            "OpenSansRegular",
+            "SegoeRegular",
+            "SegoePrint",
+            "Arial",
+            "Calibri",
+            "Roboto",
+            "Tahoma",
+            "TimesNewRoman",
+            "Georgia",
+            "Merriweather"
+        };
+
+    static public readonly List<Color> Backgrounds = new List<Color>
+        {
+            Color.FromRgb(255,255,255),
+            Color.FromRgb(0,0,0),
+            Color.FromRgb(224,219,182),
+            Color.FromRgb(190,190,190)
+        };
 
     int _userFont;
     double _userFontSize;
@@ -54,30 +75,9 @@ public class PreferenceServices : INotifyPropertyChanged
     public PreferenceServices(IPreferences preferences)
     {
         this.preferences = preferences;
-        Fonts = new List<string>
-        {
-            "OpenSansRegular",
-            "SegoeRegular",
-            "SegoePrint",
-            "Arial",
-            "Calibri",
-            "Roboto",
-            "Tahoma",
-            "TimesNewRoman",
-            "Georgia",
-            "Merriweather"
-        };
-        Backgrounds = new List<Color>
-        {
-            Color.FromRgb(255,255,255),
-            Color.FromRgb(0,0,0),
-            Color.FromRgb(224,219,182),
-            Color.FromRgb(190,190,190)
-        };
-
-        BackColor = Backgrounds[preferences.Get<int>("BackColor", 0)];
-        Font = Fonts[preferences.Get<int>("Font", 0)];
-        FontSize = preferences.Get<double>("FontSize", 18.0);
+        BackColor = Backgrounds[preferences.Get("BackColor", 0)];
+        Font = Fonts[preferences.Get("Font", 0)];
+        FontSize = preferences.Get("FontSize", 18.0);
 
 
 
@@ -106,7 +106,7 @@ public class PreferenceServices : INotifyPropertyChanged
         preferences.Set(nameof(FontSize), _userFontSize);
         preferences.Set(nameof(Font), _userFont);
         preferences.Set(nameof(BackColor), _userBackColor);
-        
+
 
     }
 

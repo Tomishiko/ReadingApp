@@ -49,8 +49,8 @@ public class BaseServices
         books = new Dictionary<string, Book>();
         ImageParams = new()
         {
-            [picParams.preview] = ".webp?width=150&quality=60",
-            [picParams.bigpic] = ".webp",
+            [picParams.preview] = "_cover.jpg?width=400&quality=80",
+            [picParams.bigpic] = "_cover.jpg",
             [picParams.source] = conf.GetRequiredSection("images").Value
 
         };
@@ -68,7 +68,11 @@ public class BaseServices
 
         if (books?.Count > 0)
             return books;
-        var contents = await File.ReadAllTextAsync(Path.Combine(fileSystem.AppDataDirectory, "library.dat"));
+
+        var path = Path.Combine(fileSystem.AppDataDirectory, "library.dat");
+        if (!File.Exists(path))
+            return books;
+        var contents = await File.ReadAllTextAsync(path);
         books = JsonSerializer.Deserialize<Dictionary<string, Book>>(contents);
         
         return books;
@@ -225,10 +229,15 @@ public class BaseServices
     /// <param name="picParam">picture quality parametr(preview or bigpic)</param>
     /// <returns> A string representing uri path for picture</returns>
     /// <exception cref="ArgumentNullException"></exception>
-    public string FormPicturePath(string slugName, picParams sizeParam = picParams.preview)
+    public string FormPicturePath(string originalImage,string novelSlug ,picParams sizeParam = picParams.preview)
     {
-        ArgumentNullException.ThrowIfNull(slugName);
-        return ImageParams[picParams.source] + slugName + ImageParams[sizeParam];
+        ArgumentNullException.ThrowIfNull(novelSlug);
+
+        if (originalImage == null)
+            return "unloaded_image.png";
+        //return ImageParams[picParams.source] + slugName + ImageParams[sizeParam];   This domain is not supported for now!!
+        return originalImage;
+        
     }
     /// <summary>
     /// Checks if specific book is present in the lib

@@ -57,10 +57,8 @@ public partial class DetailsViewModel : BaseViewModel, IQueryAttributable
                 Ranking = bookinfo.ranking,
                 Slug=bookinfo.slug
             };
-            if (bookinfo.image == null)
-                book.PicturePath = "unloaded_image.png";
-            else
-                book.PicturePath = services.FormPicturePath(bookinfo.slug,picParams.bigpic);
+            book.PicturePath = services.FormPicturePath(bookinfo.image,bookinfo.slug);
+                
             
             Book = book;
             if (services.CheckBookInLib(book))

@@ -5,6 +5,7 @@
              xmlns:views="clr-namespace:WuxiaApp.Views"
              xmlns:viewmodels="clr-namespace:WuxiaApp.ViewModels"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:servs="clr-namespace:WuxiaApp.Servs"
              xmlns:conv="clr-namespace:WuxiaApp.Servs.Converters"
              x:Class="WuxiaApp.Views.ReadingView"
              x:DataType="viewmodels:ReadingViewModel"
@@ -150,10 +151,12 @@
     <ContentPage.Behaviors>
         <!--StatusBarStyle="{Binding Source={x:Reference Page}, Path=preference.BackColor,Converter={StaticResource ContrastColor}}"-->
 
-        <toolkit:StatusBarBehavior StatusBarColor="{Binding Source={x:Reference Page}, Path=preference.BackColor}"
+        <toolkit:StatusBarBehavior x:Name="StatusBar"
+                                   StatusBarColor="{Binding Source={x:Reference MainGrid}, Path=BackgroundColor}"
                                    StatusBarStyle="{Binding Source={x:Reference Page}, Path=preference.BackColor,Converter={StaticResource ContrastColor}}" />
     </ContentPage.Behaviors>
-    <Grid x:Name="MainGrid">
+    <Grid x:Name="MainGrid"
+          BackgroundColor="{Binding Source={x:Reference Page}, Path=preference.BackColor}">
         <Grid x:Name="DockTop"
               ColumnDefinitions="50,*,55"
               ZIndex="2"
@@ -220,6 +223,8 @@
             </TableRoot>
         </TableView>
         <CollectionView x:Name="colorCollection"
+                        x:DataType="views:ReadingView"
+                        ItemsSource="{Binding Backgrounds}"
                         HorizontalOptions="Center"
                         VerticalOptions="End"
                         HeightRequest="100"
@@ -233,11 +238,8 @@
                         SelectionMode="Single"
                         Style="{StaticResource colorPrickerStyle}"
                         SelectionChanged="colorCollection_SelectionChanged">
-            <!-- <Border.GestureRecognizers>
-                <TapGestureRecognizer Tapped="ColorChangerTapped" />
-            </Border.GestureRecognizers> -->
             <CollectionView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="{x:Type x:Object}">
                     <Border BackgroundColor="{Binding .}"
                             Style="{StaticResource ColorPickerBorder}"
                             ZIndex="0" />
@@ -324,6 +326,8 @@
             </TableRoot>
         </TableView>
         <ListView x:Name="fontpicker"
+                  x:DataType="views:ReadingView"
+                  ItemsSource="{Binding Fonts}"
                   BackgroundColor="{AppThemeBinding Dark={StaticResource Gray900}, Light={StaticResource Gray25}}"
                   HeightRequest="190"
                   WidthRequest="200"
@@ -336,7 +340,7 @@
                   VerticalScrollBarVisibility="Never"
                   ItemTapped="Fontpicker_ItemTapped">
             <ListView.ItemTemplate>
-                <DataTemplate>
+                <DataTemplate x:DataType="{x:Type x:String}">
                     <ViewCell>
                         <Label Text="{Binding .}"
                                FontFamily="{Binding .}"
@@ -349,7 +353,7 @@
         <ScrollView x:Name="Scroll"
                     ZIndex="0"
                     IsVisible="{Binding IsNotBusy}"
-                    BackgroundColor="{Binding Source={x:Reference Page}, Path=preference.BackColor}">
+                    BackgroundColor="Transparent">
             <VerticalStackLayout Margin="0,60,0,0"
                                  BackgroundColor="Transparent">
                 <VerticalStackLayout.GestureRecognizers>
@@ -371,10 +375,10 @@
                        TextType="Text"
                        TextColor="{Binding Source={x:Reference Page}, Path=preference.BackColor,Converter={StaticResource ContrastColor}}"
                        Grid.Row="1"
-                       Padding="10"
+                       Padding="30,10,30,10"
                        LineBreakMode="WordWrap"
                        FontSize="{Binding Source={x:Reference slider}, Path=Value}"
-                       LineHeight="1.3"
+                       LineHeight="1.4"
                        FontFamily="{Binding Source={x:Reference Page},Path=preference.Font}"
                        x:Name="MainText" />
                 <HorizontalStackLayout HorizontalOptions="CenterAndExpand"

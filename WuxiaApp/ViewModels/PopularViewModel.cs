@@ -113,10 +113,7 @@ public partial class PopularViewModel : BaseViewModel
                 Views = result.views,
                 Slug = result.slug
             };
-            if (result.image == null)
-                book.PicturePath = "unloaded_image.png";
-            else
-                book.PicturePath = services.FormPicturePath(result.slug);
+            book.PicturePath = services.FormPicturePath(result.image,result.slug);
             currentElement.Books.Add(book);
         }
 
@@ -146,10 +143,7 @@ public partial class PopularViewModel : BaseViewModel
                     Views = result.views,
                     Slug = result.slug
                 };
-                if (result.image == null)
-                    book.PicturePath = "unloaded_image.png";
-                else
-                    book.PicturePath = services.FormPicturePath(result.slug);
+                book.PicturePath = services.FormPicturePath(result.image,result.slug);
                 currentElement.Books.Add(book);
             }
         }

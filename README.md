@@ -10,8 +10,9 @@ Crossplatform reading app, simple mobile app for reading wuxia online. Stay up-t
 - discover new books with popular tab
 - search books by name (more search options will be addded in the future)
 - library for keeping track of books currently reading
-  <div align="center">
+
 ## Screenshots
+<div align="center">
   <img src=images/library.jpg height=672 width=303 />
 
   <img src=images/reading.jpg height=672 width=303 />

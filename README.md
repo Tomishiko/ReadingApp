@@ -23,10 +23,5 @@ Crossplatform reading app, simple mobile app for reading wuxia online. Stay up-t
 </div>
 
 
-## Change log:
-## Palanned features:
-- [ ] Add TTS 
-- [ ] Add category search
-- [ ] Advanced filtering
 
 
